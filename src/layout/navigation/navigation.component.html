@@ -1,0 +1,48 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar id="menuToolBarID"> <span>Menu</span></mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item href="#">
+        <mat-icon matSuffix>grading</mat-icon>
+        <span>Link 1</span>
+      </a>
+      <a mat-list-item href="#">
+        <mat-icon matSuffix>grading</mat-icon>
+        <span>Link 2</span>
+      </a>
+      <a mat-list-item (click)="onLogout()">
+        <mat-icon matSuffix>logout</mat-icon>
+        <span>Salir</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Advisers_boilerplate</span>
+      <div class="dark-mode">
+        <mat-slide-toggle
+        [(ngModel)]="isDarkThemeActive"
+        color="primary"
+        (ngModelChange)="onChange($event)"
+        class="custom-switcher-pos"
+        matTooltip="Modo Oscuro"
+        checked="isDarkThemeActive"
+        ></mat-slide-toggle>
+        <mat-icon matSuffix class="fa-icon-class" *ngIf="isDarkThemeActive">dark_mode</mat-icon>
+        <mat-icon matSuffix class="fa-icon-class" *ngIf="!isDarkThemeActive">light_mode</mat-icon>
+      </div>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

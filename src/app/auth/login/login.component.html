@@ -1,0 +1,46 @@
+<div class="bg-container">
+  <form class="login-form" (submit)="onLogin(loginForm)" #loginForm="ngForm">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <fa-icon [icon]="faUser" size="5x" class="fa-icon-class"></fa-icon>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            name="email"
+            ngModel
+            #emailInput="ngModel"
+            email
+            required
+          />
+          <mat-icon matSuffix class="fa-icon-class">alternate_email</mat-icon>
+          <mat-error *ngIf="emailInput.invalid">Email incorrecto</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            name="password"
+            ngModel
+            #passwordInput="ngModel"
+            type="password"
+            required
+          />
+          <mat-icon matSuffix class="fa-icon-class">password</mat-icon>
+          <mat-error *ngIf="passwordInput.invalid">Password incorrecto</mat-error>
+        </mat-form-field>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" type="submit">Login</button>
+        </mat-card-actions>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+</div>

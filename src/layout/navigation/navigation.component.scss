@@ -1,0 +1,40 @@
+mat-toolbar {
+  display: flex;
+  flex-direction: inherit;
+}
+
+mat-icon {
+  margin-right: 5%;
+}
+
+#menuToolBarID {
+  flex-direction: inherit;
+}
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.dark-mode {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+:host ::ng-deep span>span {
+  display: flex;
+}
