@@ -50,4 +50,24 @@ export class NavigationComponent implements OnInit {
     this.authService.logoutUser();
   }
 
+  menuItems = [
+    {
+      label: 'Item 1',
+      children: [
+        { label: 'Subitem 1.1' },
+        { label: 'Subitem 1.2' }
+      ]
+    },
+    {
+      label: 'Item 2',
+      children: [
+        { label: 'Subitem 2.1' },
+        { label: 'Subitem 2.2' }
+      ]
+    },
+    {
+      label: 'Item 3'
+    }
+  ];
+
 }

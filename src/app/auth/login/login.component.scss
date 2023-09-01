@@ -1,8 +1,9 @@
 mat-card {
 	border-radius: 10px 10px 0 0;
-	box-shadow: 10px 10px 14px black;
-  background-color: #305e62;
-  background: linear-gradient(#305e62 45%, #17262a);
+	box-shadow: 5px 5px 10px black;
+  background-color: rgba(255,255,255,0.13);
+  // background-color: #305e62;
+  // background: linear-gradient(#305e62 45%, #17262a);
 }
 
 mat-card-content {
@@ -29,11 +30,13 @@ mat-card-actions {
 mat-card-actions button {
   width: 100%;
   margin-bottom: 2rem;
-  background-color: #fd3c00;
+  // background-color: #fd3c00;
+  // background-color: #275dda;
+  background-color: #3b91e8;
 }
 
 .bg-container {
-  background-image: url('../../../assets/background_login/desktop-1440x900.jpg');
+  background-image: url('../../../assets/background_login/material-design-blue-and-white-to-1280x1024.jpg');
   width: 100%;
   height: 100vh;
   background-position: center;
@@ -49,5 +52,7 @@ mat-card-actions button {
 }
 
 .fa-icon-class {
-  color: #dd611d;
+  // color: #dd611d;
+  // color: #275dda;
+  color: #3b91e8;
 }
