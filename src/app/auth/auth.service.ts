@@ -42,14 +42,13 @@ export class AuthService {
     this.http.post<User>(BACKEND_URL + 'authenticate', authData)
     .subscribe({
       next: (res) => {
-        console.log('res>>>>', res);
         const token = res.token;
         if(token) {
           this.userID = res.usuario.usuario_id
           this.isAuthenticated = true;
           this.authStatusSub.next(true);
           this.saveAuthData(token, this.userID);
-          this.router.navigate(['/'])
+          this.router.navigate(['/navigation'])
         }
       },
       error: (err) => {

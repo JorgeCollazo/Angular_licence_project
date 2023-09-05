@@ -3,13 +3,13 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '../../app/auth/auth.service';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
+
 export class NavigationComponent implements OnInit {
 
   private breakpointObserver = inject(BreakpointObserver);
@@ -21,7 +21,7 @@ export class NavigationComponent implements OnInit {
       shareReplay()
     );
 
-  constructor(@Inject(DOCUMENT) private document: Document, private authService: AuthService) { }
+  constructor(@Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit(): void {
     this.checkDarkThemeActive();
@@ -46,28 +46,6 @@ export class NavigationComponent implements OnInit {
     }
   }
 
-  onLogout() {
-    this.authService.logoutUser();
-  }
 
-  menuItems = [
-    {
-      label: 'Item 1',
-      children: [
-        { label: 'Subitem 1.1' },
-        { label: 'Subitem 1.2' }
-      ]
-    },
-    {
-      label: 'Item 2',
-      children: [
-        { label: 'Subitem 2.1' },
-        { label: 'Subitem 2.2' }
-      ]
-    },
-    {
-      label: 'Item 3'
-    }
-  ];
 
 }

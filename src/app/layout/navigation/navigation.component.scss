@@ -3,10 +3,6 @@ mat-toolbar {
   flex-direction: inherit;
 }
 
-mat-icon {
-  margin-right: 5%;
-}
-
 #menuToolBarID {
   flex-direction: inherit;
 }
@@ -37,4 +33,11 @@ mat-icon {
 
 :host ::ng-deep span>span {
   display: flex;
+}
+
+#layout-container {
+	width: 80%;
+	margin: auto;
+  margin-top: 5rem;
+	padding-left: 13.5rem;
 }
