@@ -9,10 +9,12 @@ mat-toolbar {
 
 .sidenav-container {
   height: 100%;
+  transition: background-color 0.3s;
 }
 
 .sidenav {
   width: 200px;
+  transition: background-color 0.3s;
 }
 
 .sidenav .mat-toolbar {
@@ -36,8 +38,17 @@ mat-toolbar {
 }
 
 #layout-container {
-	width: 80%;
-	margin: auto;
-  margin-top: 5rem;
-	padding-left: 13.5rem;
+	width: 95%;
+  margin: auto;
+  margin-top: 3rem;
+  // padding-left: 13.5rem;
+  height: 100vh;
+}
+
+section {
+  transition: all 0.3s;
+}
+
+body.dark-mode {
+  transition: a
 }

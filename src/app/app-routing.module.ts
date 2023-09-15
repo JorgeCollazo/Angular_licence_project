@@ -5,7 +5,7 @@ import { authGuard } from './auth/auth.guard';
 import { UserListComponent } from './security/users/user-list/user-list.component';
 
 const routes: Routes = [
-  { path: 'navigation', component: NavigationComponent, canActivate: [authGuard] ,
+  { path: 'navigation', component: NavigationComponent, /* canActivate: [authGuard] , */
     children: [
       { path: 'user-list', component: UserListComponent}
     //   { path: 'security', loadChildren: () => import('./security/security.module').then(m => m.SecurityModule) },

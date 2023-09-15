@@ -11,16 +11,16 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+
 
 @NgModule({
   declarations: [],
   imports: [
-
   ],
   exports: [
-    CommonModule,
     MatCardModule,
     MatSlideToggleModule,
     MatToolbarModule,
@@ -33,8 +33,8 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
     MatInputModule,
     MatPaginatorModule,
     MatSortModule,
-    MatTableModule
-    
+    MatTableModule,
+    MatDialogModule,
   ]
 })
 export class MaterialModule { }

@@ -14,9 +14,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
       >
       <li *ngFor="let item of data.items" class="sublevel-nav-item">
         <a mat-list-item class="sublevel-nav-link" *ngIf="item.items && item.items.length > 0" (click)="handleClick(item)">
-          <mat-icon matSuffix>{{data.icon}}</mat-icon>
+          <mat-icon matSuffix>{{item.icon}}</mat-icon>
           <span class="sublevel-link-text" *ngIf="collapsed">{{item.label}}</span>
-          <mat-icon matSuffix>{{data.icon}}</mat-icon>
+          <mat-icon matSuffix>{{item.icon}}</mat-icon>
         </a>
         <a mat-list-item class="sublevel-nav-link"
           *ngIf="!item.items || (item.items && item.items.length === 0)"
@@ -24,7 +24,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
           routerLinkActive="active-sublevel"
           [routerLinkActiveOptions]="{exact: true}"
           >
-          <mat-icon matSuffix>{{data.icon}}</mat-icon>
+          <mat-icon matSuffix>{{item.icon}}</mat-icon>
           <span class="sublevel-link-text" *ngIf="collapsed">{{item.label}}</span>
         </a>
         <div *ngIf="item.items && item.items.length > 0">
@@ -47,7 +47,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
       state('visible', style({
         height: '*'
       })),
-      transition('visible <=> hidden', [style({ overflow:'hidden'}),
+      transition('visible <=> hidden', [
         animate('{{transitionParams}}')]),
       transition('void => *', animate(0))
     ])

@@ -8,66 +8,64 @@ export const navbarData: INavbarData[] = [
     items: [
       {
         routeLink: 'dashboard',
-        icon: 'dashboard',
-        label: 'Configuración'
+        icon: 'apartment',
+        label: 'Compañías',
+      },
+      {
+        routeLink: 'dashboard',
+        icon: 'store',
+        label: 'Entidades',
+      },
+      {
+        routeLink: 'dashboard',
+        icon: 'local_mall',
+        label: 'Productos',
+      },
+      {
+        routeLink: 'dashboard',
+        icon: 'phone_iphone',
+        label: 'Dispositivos',
+      },
+      {
+        routeLink: 'dashboard',
+        icon: 'style',
+        label: 'Tipo Licencias',
+      },
+      {
+        routeLink: 'dashboard',
+        icon: 'credit_card',
+        label: 'Licencias',
+      },
+      {
+        routeLink: 'dashboard',
+        icon: 'local_atm',
+        label: 'Pagos',
       },
       {
         routeLink: 'dashboard',
         icon: 'dashboard',
-        label: 'Configuración'
-      }
+        label: 'CXC',
+      },
     ]
   },
   {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Compañías',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Entidades',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Tipo Licencias',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Productos',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Dispositivos',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Licencias',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'Pagos',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'dashboard',
-    label: 'CXC',
-  },
-  {
-    routeLink: 'user-list',
-    icon: 'admin_panel_settings',
-    label: 'Usuarios',
-  },
-  {
-    routeLink: 'dashboard',
-    icon: 'admin_panel_settings',
-    label: 'Roles',
-  },
+  routeLink: 'dashboard',
+  icon: 'admin_panel_settings',
+  label: 'Administrar',
+  items: [
+    {
+      routeLink: 'user-list',
+      icon: 'group',
+      label: 'Usuarios',
+    },
+    {
+      routeLink: 'dashboard',
+      icon: 'manage_accounts',
+      label: 'Roles',
+    },
+  ]
+}
+
 
 ]
 

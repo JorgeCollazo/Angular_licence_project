@@ -5,7 +5,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { UserData } from './user-data.interface';
-
+// import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 /** Constants used to fill up our data base. */
 const FRUITS: string[] = [
   'blueberry',
@@ -47,6 +47,7 @@ const NAMES: string[] = [
 })
 
 export class UserListComponent implements AfterViewInit {
+
   displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
   dataSource: MatTableDataSource<UserData>;
 
@@ -54,6 +55,7 @@ export class UserListComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor() {
+
     // Create 100 users
     const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
 
@@ -89,4 +91,15 @@ createNewUser(id: number): UserData {
     fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
   };
 }
+
+  openUserDialog(): void {
+    // const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+    //   data: {name: this.name, animal: this.animal},
+    // });
+
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('The dialog was closed');
+    //   this.animal = result;
+    // });
+  }
 }

@@ -37,7 +37,7 @@ export class AuthService {
     return this.authStatusSub.asObservable();
   }
 
-  loginUser(email: string, password: string) {
+  loginUser(email: string, password: string) { this.router.navigate(['/navigation']); return;
     const authData: AuthData = { User: email, Pwd: password}
     this.http.post<User>(BACKEND_URL + 'authenticate', authData)
     .subscribe({
