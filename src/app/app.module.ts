@@ -14,14 +14,13 @@ import { MaterialModule } from './material/material.module';
 /* Project imports */
 
 import { AuthModule } from './auth/auth.module';
-import { SecurityModule } from './security/security.module';
 import { NavigationComponent } from '../app/layout/navigation/navigation.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { SidenavComponent } from './layout/sidenav/sidenav.component';
 import { SublevelMenuComponent } from './layout/sidenav/sublevel-menu.component';
-import { SidenavMenuComponent } from './layout/sidenav-menu/sidenav-menu.component';
-import { HeaderPageComponent } from './layout/header-page/header-page.component';
-import { UserListComponent } from './security/users/user-list/user-list.component';
+import { SecurityModule } from './security/security.module';
+import { SharedModule } from './shared/shared/shared.module';
+import { CompaniesComponent } from './pages/companies/companies.component';
 
 @NgModule({
   declarations: [
@@ -30,9 +29,7 @@ import { UserListComponent } from './security/users/user-list/user-list.componen
     RegisterComponent,
     SidenavComponent,
     SublevelMenuComponent,
-    SidenavMenuComponent,
-    HeaderPageComponent,
-    UserListComponent         // TODO: Remove from here
+    CompaniesComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,9 +41,10 @@ import { UserListComponent } from './security/users/user-list/user-list.componen
     AuthModule,
     MaterialModule,
     SecurityModule,
+    SharedModule,
+
   ],
   exports: [
-    // HeaderPageComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

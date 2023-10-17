@@ -1,14 +1,10 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import { UserData } from './user-data.interface';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { UserDialogComponent } from '../user-dialog/user-dialog.component';
-// import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-/** Constants used to fill up our data base. */
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ColumnConfig } from './columnConfig.interface';
+
 const FRUITS: string[] = [
   'blueberry',
   'lychee',
@@ -41,23 +37,26 @@ const NAMES: string[] = [
   'Elizabeth',
 ];
 
-
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
+  selector: 'app-generic-table',
+  templateUrl: './generic-table.component.html',
+  styleUrls: ['./generic-table.component.scss']
 })
 
-export class UserListComponent implements AfterViewInit {
+export class GenericTableComponent<T> {
 
   animal: string = '';
   name: string = '';
 
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+  // displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
+  dataSource: MatTableDataSource<T>;
+  displayedColumns!: string[];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @Input() displayedColumnsView: string[] = [];
+  @Input() columns: ColumnConfig[] = [];
+  @Input() dialogInstances?: any;
 
   constructor(public dialog: MatDialog) {
 
@@ -66,11 +65,13 @@ export class UserListComponent implements AfterViewInit {
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
+    // this.displayedColumns = this.displayedColumnsView;
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.displayedColumns = this.displayedColumnsView;
   }
 
   applyFilter(event: Event) {
@@ -82,7 +83,7 @@ export class UserListComponent implements AfterViewInit {
     }
   }
   /** Builds and returns a new User. */
-createNewUser(id: number): UserData {
+createNewUser(id: number): any {
   const name =
     NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
     ' ' +
@@ -98,7 +99,9 @@ createNewUser(id: number): UserData {
 }
 
   openUserDialog(): void {
-    const dialogRef = this.dialog.open(UserDialogComponent, {
+    console.log('this.dialogInstances>>>>>', this.dialogInstances);
+
+    const dialogRef = this.dialog.open(this.dialogInstances, {
       data: {name: this.name, animal: this.animal},
     });
 

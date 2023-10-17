@@ -3,6 +3,10 @@ mat-toolbar {
   flex-direction: inherit;
 }
 
+app-header-page {
+  margin-top: 2rem;
+}
+
 #menuToolBarID {
   flex-direction: inherit;
 }
@@ -40,8 +44,7 @@ mat-toolbar {
 #layout-container {
 	width: 95%;
   margin: auto;
-  margin-top: 3rem;
-  // padding-left: 13.5rem;
+  margin-top: 2rem;
   height: 100vh;
 }
 

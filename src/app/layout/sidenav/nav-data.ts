@@ -7,7 +7,7 @@ export const navbarData: INavbarData[] = [
     label: 'General',
     items: [
       {
-        routeLink: 'dashboard',
+        routeLink: 'pages/companies-list',
         icon: 'apartment',
         label: 'Compañías',
       },
@@ -54,12 +54,12 @@ export const navbarData: INavbarData[] = [
   label: 'Administrar',
   items: [
     {
-      routeLink: 'user-list',
+      routeLink: 'security/user-list',
       icon: 'group',
       label: 'Usuarios',
     },
     {
-      routeLink: 'dashboard',
+      routeLink: 'security/role-list',
       icon: 'manage_accounts',
       label: 'Roles',
     },

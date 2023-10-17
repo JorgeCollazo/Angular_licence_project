@@ -2,25 +2,31 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SecurityRoutingModule } from './security-routing.module';
 import { MaterialModule } from '../material/material.module';
+import { FormsModule } from '@angular/forms';
 
-import { HeaderPageComponent } from '../layout/header-page/header-page.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import { UserDialogComponent } from './users/user-dialog/user-dialog.component';
+import { RoleListComponent } from './roles/role-list/role-list.component';
+import { RoleDialogComponent } from './roles/role-dialog/role-dialog.component';
+import { SharedModule } from '../shared/shared/shared.module';
 
 @NgModule({
   declarations: [
-    // UserListComponent,
+    UserListComponent,
     UserDialogComponent,
-    // HeaderPageComponent
+    RoleListComponent,
+    RoleDialogComponent,
   ],
   imports: [
     CommonModule,
     SecurityRoutingModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    SharedModule
   ],
   exports: [
-    // UserListComponent,
-    MaterialModule
+    MaterialModule,
+    SecurityRoutingModule,
   ]
 })
 export class SecurityModule { }

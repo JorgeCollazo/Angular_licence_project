@@ -7,14 +7,11 @@ import { UserListComponent } from './security/users/user-list/user-list.componen
 const routes: Routes = [
   { path: 'navigation', component: NavigationComponent, /* canActivate: [authGuard] , */
     children: [
-      { path: 'user-list', component: UserListComponent}
-    //   { path: 'security', loadChildren: () => import('./security/security.module').then(m => m.SecurityModule) },
+      { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
+      { path: 'security', loadChildren: () => import('./security/security.module').then(m => m.SecurityModule) },
+      { path: 'pages', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) },
     ]
   },
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
-  // { path: 'security', loadChildren: () => import('./security/security.module').then(m => m.SecurityModule) },
-  // { path: '', redirectTo: '/login', pathMatch: 'full' }
-  { path: 'user-list', component: UserListComponent}
 ];
 
 @NgModule({
