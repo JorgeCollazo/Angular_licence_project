@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{data.dialogTitle}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="genericForm">
+    <mat-form-field *ngIf="data.showNameControl">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="data.animal">
+    </mat-form-field>
+    <mat-form-field *ngIf="data.showDescription">
+      <mat-label>Descripcion</mat-label>
+      <input matInput formControlName="data.animal">
+    </mat-form-field>
+    <mat-form-field *ngIf="data.showRUC">
+      <mat-label>RUC</mat-label>
+      <input matInput formControlName="ruc">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="saveDataForm()">Añadir</button>
+  <button mat-button (click)="onNoClick()">Cerrar</button>
+</div>

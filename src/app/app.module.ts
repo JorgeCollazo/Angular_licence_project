@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 /* Third-party imports */
@@ -21,6 +21,7 @@ import { SublevelMenuComponent } from './layout/sidenav/sublevel-menu.component'
 import { SecurityModule } from './security/security.module';
 import { SharedModule } from './shared/shared/shared.module';
 import { CompaniesComponent } from './pages/companies/companies.component';
+import { GenericDialogComponent } from './layout/generic-dialog/generic-dialog.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { CompaniesComponent } from './pages/companies/companies.component';
     SidenavComponent,
     SublevelMenuComponent,
     CompaniesComponent,
+    GenericDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,7 @@ import { CompaniesComponent } from './pages/companies/companies.component';
     MaterialModule,
     SecurityModule,
     SharedModule,
+    ReactiveFormsModule,
 
   ],
   exports: [

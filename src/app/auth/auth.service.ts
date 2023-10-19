@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from './user.interface';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 const BACKEND_URL = environment.apiURL + '/Auth/';
 
@@ -37,7 +38,7 @@ export class AuthService {
     return this.authStatusSub.asObservable();
   }
 
-  loginUser(email: string, password: string) { this.router.navigate(['/navigation']); return;
+  loginUser(email: string, password: string) { 
     const authData: AuthData = { User: email, Pwd: password}
     this.http.post<User>(BACKEND_URL + 'authenticate', authData)
     .subscribe({
@@ -46,9 +47,16 @@ export class AuthService {
         if(token) {
           this.userID = res.usuario.usuario_id
           this.isAuthenticated = true;
-          this.authStatusSub.next(true);
+          this.authStatusSub.next(true);     
           this.saveAuthData(token, this.userID);
           this.router.navigate(['/navigation'])
+        } else {
+          this.authStatusSub.next(false);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: res.message
+          })
         }
       },
       error: (err) => {

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ColumnConfig } from 'src/app/layout/generic-table/columnConfig.interface';
 import { RoleDialogComponent } from '../role-dialog/role-dialog.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-role-list',
@@ -10,7 +11,6 @@ import { RoleDialogComponent } from '../role-dialog/role-dialog.component';
 export class RoleListComponent {
 
   displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dialogInstance?: RoleDialogComponent;
   roleColumns: ColumnConfig[] = [
     {
       name: 'id',
@@ -33,4 +33,20 @@ export class RoleListComponent {
       cellTemplate: (row) => row.fruit
     },
   ];
+  dialogData: Object = 
+    {
+      dialogTitle: 'Añadir Rol', 
+      // formGroup: this.createRoleForm(),
+      showName: true,
+      showDescription: true,
+    }
+
+  constructor(private fb: FormBuilder) {}
+
+  createRoleForm(): FormGroup {
+    return this.fb.group({
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+    });
+  }
 }

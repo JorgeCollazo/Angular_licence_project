@@ -23,9 +23,10 @@
     "@fortawesome/angular-fontawesome": "^0.13.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@sweetalert2/ngx-sweetalert2": "^12.2.0",
     "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
-    "sweetalert2": "^11.7.27",
+    "sweetalert2": "^11.7.32",
     "toastr": "^2.1.4",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

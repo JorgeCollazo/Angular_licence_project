@@ -35,6 +35,14 @@ mat-card-actions button {
   background-color: #3b91e8;
 }
 
+
+app-footer-page {
+  margin: auto;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+
 .bg-container {
   background-image: url('../../../assets/background_login/blue-print-with-laptop-copy-space.jpg');
   width: 100%;
@@ -43,6 +51,7 @@ mat-card-actions button {
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
+  flex-direction: column;
 }
 
 .login-form {

@@ -9,7 +9,7 @@ export interface DialogData {
 @Component({
   selector: 'app-role-dialog',
   templateUrl: './role-dialog.component.html',
-  styleUrls: ['./role-dialog.component.scss']
+  styleUrls: ['./role-dialog.component.scss'],
 })
 export class RoleDialogComponent {
 

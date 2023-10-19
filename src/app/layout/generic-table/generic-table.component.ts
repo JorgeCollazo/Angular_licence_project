@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ColumnConfig } from './columnConfig.interface';
+import { GenericDialogComponent } from '../generic-dialog/generic-dialog.component';
 
 const FRUITS: string[] = [
   'blueberry',
@@ -45,6 +46,7 @@ const NAMES: string[] = [
 
 export class GenericTableComponent<T> {
 
+  title: string = '';
   animal: string = '';
   name: string = '';
 
@@ -56,7 +58,7 @@ export class GenericTableComponent<T> {
   @ViewChild(MatSort) sort!: MatSort;
   @Input() displayedColumnsView: string[] = [];
   @Input() columns: ColumnConfig[] = [];
-  @Input() dialogInstances?: any;
+  @Input() genericData: Object = {};
 
   constructor(public dialog: MatDialog) {
 
@@ -65,7 +67,6 @@ export class GenericTableComponent<T> {
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
-    // this.displayedColumns = this.displayedColumnsView;
   }
 
   ngAfterViewInit() {
@@ -99,10 +100,9 @@ createNewUser(id: number): any {
 }
 
   openUserDialog(): void {
-    console.log('this.dialogInstances>>>>>', this.dialogInstances);
 
-    const dialogRef = this.dialog.open(this.dialogInstances, {
-      data: {name: this.name, animal: this.animal},
+    const dialogRef = this.dialog.open(GenericDialogComponent, {
+      data: this.genericData,
     });
 
     dialogRef.afterClosed().subscribe(result => {

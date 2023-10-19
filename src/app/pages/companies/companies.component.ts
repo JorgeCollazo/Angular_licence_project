@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ColumnConfig } from 'src/app/layout/generic-table/columnConfig.interface';
 
 @Component({
@@ -31,4 +32,20 @@ export class CompaniesComponent {
       cellTemplate: (row) => row.fruit
     },
   ];
+
+  dialogData: Object = 
+    {
+      dialogTitle: 'Añadir compañía', 
+      formGroup: this.createRoleForm(),
+      showRUC: true,
+      ruc: '',
+    }
+
+  constructor(private fb: FormBuilder) {}
+  
+  createRoleForm(): FormGroup {
+    return this.fb.group({
+      ruc: ['', [Validators.required]],
+    });
+  }
 }

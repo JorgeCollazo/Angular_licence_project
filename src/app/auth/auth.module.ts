@@ -8,6 +8,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { SharedModule } from '../shared/shared/shared.module';
 
 
 @NgModule({
@@ -22,6 +24,8 @@ import { LoginComponent } from './login/login.component';
     MaterialModule,
     ToastrModule.forRoot(),
     FontAwesomeModule,
+    SweetAlert2Module,
+    SharedModule
   ],
   exports: [
     LoginComponent,
