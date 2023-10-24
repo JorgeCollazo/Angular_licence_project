@@ -55,7 +55,7 @@ export class AuthService {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: res.message
+            text: 'Ha ocurrido un error en el servidor'
           })
         }
       },

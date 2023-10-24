@@ -7,7 +7,7 @@ export const navbarData: INavbarData[] = [
     label: 'General',
     items: [
       {
-        routeLink: 'pages/companies-list',
+        routeLink: 'pages/companies',
         icon: 'apartment',
         label: 'Compañías',
       },
