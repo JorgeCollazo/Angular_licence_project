@@ -27,6 +27,8 @@
     </mat-form-field>
     <div class="container-3">
       <mat-checkbox *ngIf="data.showActive" formControlName="active">Activo</mat-checkbox>
+      <mat-checkbox *ngIf="data.showShow" formControlName="mostrar">Mostrar</mat-checkbox>
+      <mat-checkbox *ngIf="data.showAdmin" formControlName="admin">Administrador</mat-checkbox>
     </div>
   </form>
 </div>

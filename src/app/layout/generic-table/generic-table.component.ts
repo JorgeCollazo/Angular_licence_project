@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -44,7 +44,7 @@ const NAMES: string[] = [
   styleUrls: ['./generic-table.component.scss']
 })
 
-export class GenericTableComponent<T> {
+export class GenericTableComponent<T> implements OnInit {
 
   title: string = '';
   animal: string = '';
@@ -59,15 +59,24 @@ export class GenericTableComponent<T> {
   @Input() displayedColumnsView: string[] = [];
   @Input() columns: ColumnConfig[] = [];
   @Input() genericData: Object = {};
+  @Input() tableData: Array<T> = [];
 
   constructor(public dialog: MatDialog) {
 
     // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
+    // const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
 
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+    // this.dataSource = new MatTableDataSource(users);
+    this.dataSource = new MatTableDataSource(this.tableData);
   }
+
+  ngOnInit(): void {
+      // this.navData = navbarData;
+      this.dataSource = new MatTableDataSource(this.tableData);
+      console.log('this.tableData>>>>>>', this.tableData);
+      
+    }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -84,20 +93,20 @@ export class GenericTableComponent<T> {
     }
   }
   /** Builds and returns a new User. */
-createNewUser(id: number): any {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
+// createNewUser(id: number): any {
+//   const name =
+//     NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
+//     ' ' +
+//     NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
+//     '.';
 
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}
+//   return {
+//     id: id.toString(),
+//     name: name,
+//     progress: Math.round(Math.random() * 100).toString(),
+//     fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
+//   };
+// }
 
   openUserDialog(): void {
 
