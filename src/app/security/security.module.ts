@@ -9,6 +9,7 @@ import { UserDialogComponent } from './users/user-dialog/user-dialog.component';
 import { RoleListComponent } from './roles/role-list/role-list.component';
 import { RoleDialogComponent } from './roles/role-dialog/role-dialog.component';
 import { SharedModule } from '../shared/shared/shared.module';
+import { MenuListComponent } from './menu-list/menu-list.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,8 @@ import { SharedModule } from '../shared/shared/shared.module';
     UserDialogComponent,
     RoleListComponent,
     RoleDialogComponent,
+    MenuListComponent,
+    MenuListComponent,
   ],
   imports: [
     CommonModule,

@@ -22,7 +22,7 @@ import { SecurityModule } from './security/security.module';
 import { SharedModule } from './shared/shared/shared.module';
 import { CompaniesComponent } from './pages/companies/companies.component';
 import { GenericDialogComponent } from './layout/generic-dialog/generic-dialog.component';
-
+import {MatGridListModule} from '@angular/material/grid-list';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,6 +45,7 @@ import { GenericDialogComponent } from './layout/generic-dialog/generic-dialog.c
     SecurityModule,
     SharedModule,
     ReactiveFormsModule,
+    MatGridListModule
 
   ],
   exports: [

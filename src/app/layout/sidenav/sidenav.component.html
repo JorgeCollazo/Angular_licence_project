@@ -1,34 +1,15 @@
 <mat-nav-list>
   <div class="sidenav-nav">
     <div class="sidenav-nav-item" *ngFor="let data of navData">
-      <a mat-list-item class="sidenav-nav-link" (click)="handleClick(data)"
-        *ngIf="data.items && data.items.length > 0">
-        <mat-icon matSuffix>{{data.icon}}</mat-icon>
-        <span class="sidenav-link-text" *ngIf="true">
-          {{data.label}}
-        </span>
-        <!-- <mat-icon matSuffix *ngIf="data.items && collapsed"> {{data.icon}}</mat-icon> -->
-      </a>
       <a mat-list-item
-          *ngIf="!data.items || (data.items && data.items.length === 0)"
-          [routerLink]="[data.routeLink]"
+          [routerLink]="['/navigation/security/menu-list']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{exact: true}"
       >
-        <mat-icon matSuffix>{{data.icon}}</mat-icon>
         <span class="sidenav-link-text" *ngIf="true">
-          {{data.label}}
+          {{data.menu}}
         </span>
       </a>
-
-      <div *ngIf="true && data.items && data.items.length > 0">
-        <app-sublevel-menu
-          [data]="data"
-          [collapsed]="true"
-          [multiple]="multiple"
-          [expanded]="data.expanded">
-        </app-sublevel-menu>
-      </div>
     </div>
     <a mat-list-item (click)="onLogout()">
       <mat-icon matSuffix>logout</mat-icon>

@@ -15,7 +15,12 @@ export class GenericDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<GenericDialogComponent>, private fb: FormBuilder) {
     
     this.genericForm = this.fb.group({
-      ruc: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required]],
+      link: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      order: ['', [Validators.required]],
+      level: ['', [Validators.required]],
+      active: ['', [Validators.required]],
     })
   }
 
