@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
     if(loginForm.invalid) {
       return;
     }
-    // this.isLoading = true;
+    this.isLoading = true;
     this.authService.loginUser(loginForm.value.email, loginForm.value.password);
     this.authService.getAuthStatusSub()
       .subscribe(res => {

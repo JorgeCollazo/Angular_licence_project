@@ -21,8 +21,6 @@ import { SublevelMenuComponent } from './layout/sidenav/sublevel-menu.component'
 import { SecurityModule } from './security/security.module';
 import { SharedModule } from './shared/shared/shared.module';
 import { CompaniesComponent } from './pages/companies/companies.component';
-import { GenericDialogComponent } from './layout/generic-dialog/generic-dialog.component';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +29,6 @@ import { GenericDialogComponent } from './layout/generic-dialog/generic-dialog.c
     SidenavComponent,
     SublevelMenuComponent,
     CompaniesComponent,
-    GenericDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,10 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ColumnConfig } from './columnConfig.interface';
-import { GenericDialogComponent } from '../generic-dialog/generic-dialog.component';
+import { MenuData } from './menu-data.interface';
+import { MenuDialogComponent } from '../menu-dialog/menu-dialog.component';
 
 const FRUITS: string[] = [
   'blueberry',
@@ -39,26 +39,20 @@ const NAMES: string[] = [
 ];
 
 @Component({
-  selector: 'app-generic-table',
-  templateUrl: './generic-table.component.html',
-  styleUrls: ['./generic-table.component.scss']
+  selector: 'app-menu-list',
+  templateUrl: './menu-list.component.html',
+  styleUrls: ['./menu-list.component.scss']
 })
+export class MenuListComponent {
 
-export class GenericTableComponent<T> {
-
-  title: string = '';
   animal: string = '';
   name: string = '';
 
-  // displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<T>;
-  displayedColumns!: string[];
+  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
+  dataSource: MatTableDataSource<MenuData>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @Input() displayedColumnsView: string[] = [];
-  @Input() columns: ColumnConfig[] = [];
-  @Input() genericData: Object = {};
 
   constructor(public dialog: MatDialog) {
 
@@ -72,7 +66,6 @@ export class GenericTableComponent<T> {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.displayedColumns = this.displayedColumnsView;
   }
 
   applyFilter(event: Event) {
@@ -84,7 +77,7 @@ export class GenericTableComponent<T> {
     }
   }
   /** Builds and returns a new User. */
-createNewUser(id: number): any {
+createNewUser(id: number): MenuData {
   const name =
     NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
     ' ' +
@@ -100,9 +93,8 @@ createNewUser(id: number): any {
 }
 
   openUserDialog(): void {
-
-    const dialogRef = this.dialog.open(GenericDialogComponent, {
-      data: this.genericData,
+    const dialogRef = this.dialog.open(MenuDialogComponent, {
+      data: {name: this.name, animal: this.animal},
     });
 
     dialogRef.afterClosed().subscribe(result => {

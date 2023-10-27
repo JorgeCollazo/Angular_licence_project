@@ -63,6 +63,11 @@ export const navbarData: INavbarData[] = [
       icon: 'manage_accounts',
       label: 'Roles',
     },
+    {
+      routeLink: 'security/menu-list',
+      icon: 'menu',
+      label: 'Menu',
+    },
   ]
 }
 
