@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CompaniesComponent } from './companies.component';
+import { CxcListComponent } from './cxc-list.component';
 
-describe('CompaniesComponent', () => {
-  let component: CompaniesComponent;
-  let fixture: ComponentFixture<CompaniesComponent>;
+describe('CxcListComponent', () => {
+  let component: CxcListComponent;
+  let fixture: ComponentFixture<CxcListComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CompaniesComponent]
+      declarations: [CxcListComponent]
     });
-    fixture = TestBed.createComponent(CompaniesComponent);
+    fixture = TestBed.createComponent(CxcListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

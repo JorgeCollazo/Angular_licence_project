@@ -1,25 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { navbarData } from './nav-data';
 import { AuthService } from 'src/app/auth/auth.service';
 import { INavbarData } from './inavbar.interface';
-
+import { Permission } from 'src/app/auth/interface/permissions.interface';
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent {
 
   collapsed: boolean = false;
   navData = navbarData;
+  // navData: INavbarData[] = [];
   multiple: boolean = false;
+  menu: Permission[] = [];
 
-  constructor(private authService: AuthService) {}
-
-  ngOnInit(): void {
-    this.navData = navbarData;
-    console.log("this.navData>>>>>>>>>", this.navData);
-
+  constructor(private authService: AuthService) {
+    const menuString = localStorage.getItem('_menu') ?? '';
+    // this.navData = JSON.parse(menuString);
   }
 
   onLogout() {

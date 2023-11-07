@@ -20,7 +20,6 @@ import { SidenavComponent } from './layout/sidenav/sidenav.component';
 import { SublevelMenuComponent } from './layout/sidenav/sublevel-menu.component';
 import { SecurityModule } from './security/security.module';
 import { SharedModule } from './shared/shared/shared.module';
-import { CompaniesComponent } from './pages/companies/companies.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +27,6 @@ import { CompaniesComponent } from './pages/companies/companies.component';
     RegisterComponent,
     SidenavComponent,
     SublevelMenuComponent,
-    CompaniesComponent,
   ],
   imports: [
     BrowserModule,

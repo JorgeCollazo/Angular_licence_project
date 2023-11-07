@@ -9,9 +9,9 @@ import { UserDialogComponent } from './users/user-dialog/user-dialog.component';
 import { RoleListComponent } from './roles/role-list/role-list.component';
 import { RoleDialogComponent } from './roles/role-dialog/role-dialog.component';
 import { SharedModule } from '../shared/shared/shared.module';
-import { MenuListComponent } from './menus/menu-list/menu-list.component';
+// import {MatChipsModule} from '@angular/material/chips';
 import { MenuDialogComponent } from './menus/menu-dialog/menu-dialog.component';
-
+import { MenuListComponent } from './menus/menu-list/menu-list.component';
 @NgModule({
   declarations: [
     UserListComponent,
@@ -27,7 +27,7 @@ import { MenuDialogComponent } from './menus/menu-dialog/menu-dialog.component';
     MaterialModule,
     FormsModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   exports: [
     MaterialModule,

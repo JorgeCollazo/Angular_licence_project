@@ -61,6 +61,16 @@ export class SublevelMenuComponent {
     icon: '',
     label: '',
     items: [],
+    idmenu: 0,
+    estado: 0,
+    crear: 0,
+    editar: 0,
+    eliminar: 0,
+    ver: 0,
+    principal: 0,
+    orden: 0,
+    muestra: 0,
+    parentID: 0,
   }
   @Input() collapsed = false;
   @Input() animated: boolean | undefined;

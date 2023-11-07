@@ -14,11 +14,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
 @NgModule({
   declarations: [],
   imports: [
-
   ],
   exports: [
     MatCardModule,
@@ -35,7 +35,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatSortModule,
     MatTableModule,
     MatDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSelectModule,
+    MatChipsModule
   ]
 })
 export class MaterialModule { }

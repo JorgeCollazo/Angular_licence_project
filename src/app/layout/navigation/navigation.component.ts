@@ -26,6 +26,8 @@ export class NavigationComponent implements OnInit {
   ngOnInit(): void {
     this.checkDarkThemeActive();
     this.onChange(true);
+    console.log('navigation');
+    
   }
 
   onChange(newValue: boolean):void {

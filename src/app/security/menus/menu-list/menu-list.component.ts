@@ -95,6 +95,7 @@ createNewUser(id: number): MenuData {
   openUserDialog(): void {
     const dialogRef = this.dialog.open(MenuDialogComponent, {
       data: {name: this.name, animal: this.animal},
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {
