@@ -1,6 +1,4 @@
 export interface Menu {
-  consulta: string,
-  usu_accion: number,
   nombre: string,
   status: number,
   sw_admin: number,

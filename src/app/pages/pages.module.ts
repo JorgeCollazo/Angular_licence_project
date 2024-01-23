@@ -21,6 +21,15 @@ import { PaymentListComponent } from './payments/payment-list/payment-list.compo
 import { PaymentDialogComponent } from './payments/payment-dialog/payment-dialog.component';
 import { CxcListComponent } from './cxc/cxc-list/cxc-list.component';
 import { CxcDialogComponent } from './cxc/cxc-dialog/cxc-dialog.component';
+import { SubsidiariesListComponent } from './subsidiaries/subsidiaries-list/subsidiaries-list.component';
+import { SubsidiariesDialogComponent } from './subsidiaries/subsidiaries-dialog/subsidiaries-dialog.component';
+import { CompanyTypesListComponent } from './company_types/company-types-list/company-types-list.component';
+import { CompanyTypesDialogComponent } from './company_types/company-types-dialog/company-types-dialog.component';
+import { ServicesListComponent } from './services/services-list/services-list.component';
+import { ServicesDialogComponent } from './services/services-dialog/services-dialog.component';
+import { PrecioListComponent } from './precio/precio-list/precio-list.component';
+import { PrecioDialogComponent } from './precio/precio-dialog/precio-dialog.component';
+import { ProductServicesListComponent } from './products/product-services-list/product-services-list.component';
 
 
 @NgModule({
@@ -41,6 +50,15 @@ import { CxcDialogComponent } from './cxc/cxc-dialog/cxc-dialog.component';
     PaymentDialogComponent,
     CxcListComponent,
     CxcDialogComponent,
+    SubsidiariesListComponent,
+    SubsidiariesDialogComponent,
+    CompanyTypesListComponent,
+    CompanyTypesDialogComponent,
+    ServicesListComponent,
+    ServicesDialogComponent,
+    PrecioListComponent,
+    PrecioDialogComponent,
+    ProductServicesListComponent,
   ],
   imports: [
     CommonModule,

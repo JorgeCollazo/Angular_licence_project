@@ -19,9 +19,9 @@ export class CxcDialogComponent {
 
   menuDialogForm!: FormGroup;
   disableClose: boolean = false;
-  
+
   isSelectDisabled: boolean = true;
-  
+
   constructor(
     public dialogRef: MatDialogRef<CxcDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -34,7 +34,7 @@ export class CxcDialogComponent {
       link: [null],
       orden: [null],
       nivel: [null],
-      parent: [{ value: null, disabled: true }], 
+      parent: [{ value: null, disabled: true }],
       description: [null],
       activeChbx:false,
       isSubmenuChbx:false,
@@ -53,8 +53,6 @@ export class CxcDialogComponent {
     } else {
       console.log('this.menuDialogForm.value>>>>>>>>', this.menuDialogForm.value);
       const dataDialog: Menu = {
-        consulta: "",
-        usu_accion: -1,
         nombre: this.menuDialogForm.value.name,
         status: Number(this.menuDialogForm.value.activeChbx),
         sw_admin: Number(this.menuDialogForm.value.adminChbx),

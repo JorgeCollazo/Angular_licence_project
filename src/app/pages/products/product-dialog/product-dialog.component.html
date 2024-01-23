@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>Añadir Producto</h1>
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Producto</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Producto</h1>
 <div mat-dialog-content>
   <form [formGroup]="productDialogForm">
     <div class="container-1">
@@ -7,18 +8,12 @@
         <input matInput [formControlName]="'name'">
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Link</mat-label>
-        <input matInput [formControlName]="'link'">
-      </mat-form-field>
-    </div>
-    <div class="container-2">
-      <mat-form-field>
-        <mat-label>Orden</mat-label>
-        <input matInput [formControlName]="'orden'">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Nivel</mat-label>
-        <input matInput [formControlName]="'nivel'">
+        <mat-label>Licencias</mat-label>
+        <mat-select [formControlName]="'license_id'">
+          <mat-option *ngFor="let license of licenses" [value]="license.tipo_Lic_Id">
+            {{license.cod_Lic}}
+          </mat-option>
+      </mat-select>
       </mat-form-field>
     </div>
     <div class="container-3">
@@ -27,25 +22,13 @@
         <textarea matInput [formControlName]="'description'"></textarea>
       </mat-form-field>
     </div>
-    <div class="container-5">
-      <mat-form-field>
-        <mat-label>Padre</mat-label>
-        <mat-select [formControlName]="'parent'" [disabled]="isSelectDisabled">
-          <mat-option>
-
-          </mat-option>
-      </mat-select>
-      </mat-form-field>
-      <mat-checkbox formControlName="isSubmenuChbx" (change)="setParentSelect($event.checked)">Es submenú</mat-checkbox>
-    </div>
     <div class="container-4">
       <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
-      <mat-checkbox formControlName="showChbx">Mostrar</mat-checkbox>
-      <mat-checkbox formControlName="adminChbx">Administrador</mat-checkbox>
     </div>
   </form>
 </div>
 <div mat-dialog-actions class="mat-dialog-actions-custom">
-  <button mat-raised-button color="primary" (click)="onSaveClick()">Guardar</button>
-  <button mat-raised-button color="warn" [mat-dialog-close]="false">Cerrar</button>
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editProduct()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
 </div>

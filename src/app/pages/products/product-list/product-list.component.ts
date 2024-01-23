@@ -1,72 +1,56 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserData } from 'src/app/security/users/user-list/user-data.interface';
 import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
+import { ToastrService } from 'ngx-toastr';
+import { Product, ResponseProducto } from '../interface/productoData.interface';
+import { Subscription } from 'rxjs';
+import { PagesService } from '../../pages.service';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
-const FRUITS: string[] = [
-  'blueberry',
-  'lychee',
-  'kiwi',
-  'mango',
-  'peach',
-  'lime',
-  'pomegranate',
-  'pineapple',
-];
-const NAMES: string[] = [
-  'Maia',
-  'Asher',
-  'Olivia',
-  'Atticus',
-  'Amelia',
-  'Jack',
-  'Charlotte',
-  'Theodore',
-  'Isla',
-  'Oliver',
-  'Isabella',
-  'Jasper',
-  'Cora',
-  'Levi',
-  'Violet',
-  'Arthur',
-  'Mia',
-  'Thomas',
-  'Elizabeth',
-];
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss']
+  styleUrls: ['./product-list.component.scss'],
 })
 
-export class ProductListComponent {
+export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  animal: string = '';
-  name: string = '';
-
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+  displayedColumns: string[] = ['name', 'description', 'lic_nombre', 'status', 'services', 'actions'];
+  dataSource: MatTableDataSource<Product>;
+  getProductos$: Subscription = new Subscription();
+  deleteProducto$: Subscription = new Subscription();
+  isSpinnerLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public dialog: MatDialog) {
+  constructor(
+    public dialog: MatDialog,
+    private pagesService: PagesService,
+    public router: Router,
+    private toastr: ToastrService) {
 
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
+    this.dataSource = new MatTableDataSource();
+  }
 
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+  ngOnInit(): void {
+    this.getProducts();
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.getProductos$.unsubscribe();
+    this.deleteProducto$.unsubscribe();
   }
 
   applyFilter(event: Event) {
@@ -77,32 +61,93 @@ export class ProductListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  /** Builds and returns a new User. */
-createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
 
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}
-
-  openUserDialog(): void {
+  openProductDialog(): void {
     const dialogRef = this.dialog.open(ProductDialogComponent, {
-      data: {name: this.name, animal: this.animal},
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+      this.getProductos$ = this.pagesService.getProductos().subscribe((res: ResponseProducto) => {
+        this.dataSource = new MatTableDataSource(res.productos);
+      });
     });
   }
-  
+
+  getProducts() {
+
+    this.getProductos$ = this.pagesService.getProductos()
+    .subscribe({
+      next: (res: ResponseProducto) => {
+        if(!res.success) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al cargar la lista de productos',
+          })
+        } else {
+          this.dataSource = new MatTableDataSource(res.productos);
+            this.isSpinnerLoading = false;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  deleteProduct(product: Product) {
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Alerta',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      text: `Está seguro de eliminar el producto: ${product.nombre}?`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteProducto$ = this.pagesService.deleteProduct(product.producto_Id).subscribe({
+          next: () => {
+            this.toastr.success('Producto eliminado correctamente', 'Exito', {
+              progressBar: true,
+            });
+            this.pagesService.getProductos().subscribe((res: ResponseProducto) => {
+              this.dataSource = new MatTableDataSource(res.productos);
+            });
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      }
+    });
+  }
+
+  editProduct(product: Product) {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = product;
+
+    const dialogRefEdit = this.dialog.open(
+      ProductDialogComponent,
+      dialogConfig
+    );
+
+    dialogRefEdit.afterClosed().subscribe((result) => {
+
+      if(!result.editing)
+        return;
+
+      this.getProductos$ = this.pagesService.getProductos().subscribe((res) => {
+        this.dataSource = new MatTableDataSource(res.productos);
+      });
+    });
+  }
+
+  show_Services(product: Product) {
+    this.router.navigate(['navigation/pages/product-service-list'], {queryParams: {id: product.producto_Id}});
+  }
+
 }

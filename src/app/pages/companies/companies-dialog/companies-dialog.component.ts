@@ -1,14 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Menu } from 'src/app/security/menus/interfaces/menu.intereface';
-import { SecurityService } from 'src/app/security/security.service';
 import Swal from 'sweetalert2';
-
-export interface DialogData {
-  animal: string;
-  name: string;
-}
+import { CompanyTypeData, CompanyTypeResponse } from '../../company_types/interface/company_type.interface';
+import { PagesService } from '../../pages.service';
+import { Company } from '../interface/company.interface';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-companies-dialog',
@@ -16,64 +14,99 @@ export interface DialogData {
   styleUrls: ['./companies-dialog.component.scss']
 })
 
-export class CompaniesDialogComponent {
+export class CompaniesDialogComponent implements OnInit, OnDestroy {
 
-  menuDialogForm!: FormGroup;
+  companyDialogForm: FormGroup;
   disableClose: boolean = false;
-  
+  companyTypes: CompanyTypeResponse[] = [];
   isSelectDisabled: boolean = true;
-  
+  userID: number;
+  editCompany$: Subscription = new Subscription();
+  isEditing: boolean;
+
   constructor(
     public dialogRef: MatDialogRef<CompaniesDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: Company,
     private fb: FormBuilder,
-    private security: SecurityService
+    private pagesService: PagesService,
+    private toastr: ToastrService
   ) {
-
-    this.menuDialogForm = fb.group({
-      name: [null],
-      link: [null],
-      orden: [null],
-      nivel: [null],
-      parent: [{ value: null, disabled: true }], 
-      description: [null],
-      activeChbx:false,
-      isSubmenuChbx:false,
-      showChbx:true,
-      adminChbx:false
+    this.userID = Number(localStorage.getItem('_userID'));
+    this.isEditing = !!data;
+    this.companyDialogForm = fb.group({
+      nombre: [data ? data.grp_Nombre : ''],
+      activeChbx: [data ? data.sw_Activo : false]
     });
   }
 
+  ngOnInit(): void {
+    this.pagesService.getCompanyTypes().subscribe((res) => {
+      this.companyTypes = res.tiposEntidades;
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.editCompany$.unsubscribe();
+  }
+
   onSaveClick(): void {
-    if(this.menuDialogForm.invalid) {
+    if(this.companyDialogForm.invalid) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Hay errores en el formulario'
       })
     } else {
-      console.log('this.menuDialogForm.value>>>>>>>>', this.menuDialogForm.value);
-      const dataDialog: Menu = {
-        consulta: "",
-        usu_accion: -1,
-        nombre: this.menuDialogForm.value.name,
-        status: Number(this.menuDialogForm.value.activeChbx),
-        sw_admin: Number(this.menuDialogForm.value.adminChbx),
-        descripcion: this.menuDialogForm.value.description,
-        nivel: this.menuDialogForm.value.nivel,
-        link: this.menuDialogForm.value.link,
-        sw_display: Number(this.menuDialogForm.value.showChbx),
-        id_menu: -1,
-        orden: this.menuDialogForm.value.orden,
-        padre: this.menuDialogForm.value.parent
+      const dataDialog: Partial<Company> = {
+        grp_Nombre: this.companyDialogForm.value.nombre,
+        sw_Activo: Number(this.companyDialogForm.value.activeChbx),
       }
-      this.security.saveMenu(dataDialog)
+      this.pagesService.saveCompany(dataDialog)
+        .subscribe({
+          next: (response) => {
+            if(response.success) {
+              this.toastr.success('Compañía añadida correctamente', 'Exito', {progressBar: true});
+              this.dialogRef.close({isRefreshing: true});
+            } else {
+              this.toastr.error('No ha sido posible añadir la compañía correctamente', 'Error', {progressBar: true});
+            }
+          },
+          error: () => {
+            this.toastr.error('Ha habido un error en el servidor', 'Error', {progressBar: true});
+          },
+        })
     }
-
   }
 
-  setParentSelect(selection: boolean) {
-    this.isSelectDisabled = !selection;
+  editCompany() {
+
+    const dataDialog: Company = {
+      grp_Ent_Id: this.data.grp_Ent_Id,
+      sw_Activo: Number(this.companyDialogForm.value.activeChbx),
+      grp_Nombre: this.companyDialogForm.value.nombre,
+    };
+    this.editCompany$ = this.pagesService.editCompany(dataDialog)
+    .subscribe({
+      next: (response) => {
+        if(response.success) {
+          this.toastr.success('Campos actualizados correctamente', 'Exito', {progressBar: true});
+          this.dialogRef.close({isRefreshing: true});
+        } else {
+          this.toastr.error('No ha sido posible editar el campo correctamente', 'Error', {progressBar: true});
+        }
+      },
+      error: () => {
+
+      },
+    })
   }
-  
+
+  // setParentSelect(selection: boolean) {
+  //   this.isSelectDisabled = !selection;
+  // }
+
+  close() {
+    this.dialogRef.close({isRefreshing: false});
+  }
+
 }

@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>Añadir Menú</h1>
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Menú</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Menú</h1>
 <div mat-dialog-content>
   <form [formGroup]="menuDialogForm">
     <div class="container-1">
@@ -30,11 +31,11 @@
     <div class="container-5">
       <mat-form-field>
         <mat-label>Padre</mat-label>
-        <mat-select [formControlName]="'parent'" [disabled]="isSelectDisabled">
-          <mat-option>
-
+        <mat-select [formControlName]="'parent'">
+          <mat-option *ngFor="let parentMenu of parentMenus" [value]="parentMenu.id_menu">
+            {{parentMenu.nombre}}
           </mat-option>
-      </mat-select>
+        </mat-select>
       </mat-form-field>
       <mat-checkbox formControlName="isSubmenuChbx" (change)="setParentSelect($event.checked)">Es submenú</mat-checkbox>
     </div>
@@ -46,6 +47,7 @@
   </form>
 </div>
 <div mat-dialog-actions class="mat-dialog-actions-custom">
-  <button mat-raised-button color="primary" (click)="onSaveClick()">Guardar</button>
-  <button mat-raised-button color="warn" [mat-dialog-close]="false">Cerrar</button>
+  <button mat-raised-button color="primary" (click)="saveMenu()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editMenu()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
 </div>

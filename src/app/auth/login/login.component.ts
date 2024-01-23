@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     //     this.isLoading = false;
     //   }
     // )
+    this.document.body.classList.remove('dark-mode');
   }
 
   onLogin(loginForm: NgForm) {

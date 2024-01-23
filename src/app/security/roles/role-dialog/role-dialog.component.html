@@ -2,13 +2,19 @@
 <div mat-dialog-content>
   <form [formGroup]="roleDialogForm">
     <div class="container-1">
-      <mat-form-field>
+      <mat-form-field class="custom-margin-right">
         <mat-label>Nombre</mat-label>
         <input matInput [formControlName]="'name'">
       </mat-form-field>
       <mat-form-field>
         <mat-label>Nivel</mat-label>
-        <input matInput [formControlName]="'cedula'">
+        <input matInput [formControlName]="'nivel'">
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field class="w-100">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [formControlName]="'descripcion'"></textarea>
       </mat-form-field>
     </div>
     <div class="container-3">
@@ -18,6 +24,7 @@
   </form>
 </div>
 <div mat-dialog-actions class="mat-dialog-actions-custom">
-  <button mat-raised-button color="primary" (click)="onNoClick()">Guardar</button>
-  <button mat-raised-button color="warn" [mat-dialog-close]="data.animal" cdkFocusInitial>Cerrar</button>
+  <button mat-raised-button color="primary" (click)="saveRol()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editRol()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
 </div>

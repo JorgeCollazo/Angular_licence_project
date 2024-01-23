@@ -1,0 +1,25 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Sucursal</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Sucursal</h1>
+<div mat-dialog-content>
+  <form [formGroup]="subsidiaryDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'subGrp_Nombre'">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Entidad</mat-label>
+        <mat-select [formControlName]="'entidad_Id'">
+          <mat-option *ngFor="let entity of entities" [value]="entity.enT_ID">
+            {{entity.enT_Nombre}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editSubsidiary()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>

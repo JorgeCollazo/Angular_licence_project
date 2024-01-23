@@ -1,73 +1,52 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserData } from 'src/app/security/users/user-list/user-data.interface';
 import { EntitiesDialogComponent } from '../entities-dialog/entities-dialog.component';
+import { Subscription } from 'rxjs';
+import { PagesService } from '../../pages.service';
+import { Entity, EntityDto, ResponseEntity } from '../interface/entity.interface';
+import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
-const FRUITS: string[] = [
-  'blueberry',
-  'lychee',
-  'kiwi',
-  'mango',
-  'peach',
-  'lime',
-  'pomegranate',
-  'pineapple',
-];
-const NAMES: string[] = [
-  'Maia',
-  'Asher',
-  'Olivia',
-  'Atticus',
-  'Amelia',
-  'Jack',
-  'Charlotte',
-  'Theodore',
-  'Isla',
-  'Oliver',
-  'Isabella',
-  'Jasper',
-  'Cora',
-  'Levi',
-  'Violet',
-  'Arthur',
-  'Mia',
-  'Thomas',
-  'Elizabeth',
-];
 
 @Component({
   selector: 'app-entities-list',
   templateUrl: './entities-list.component.html',
   styleUrls: ['./entities-list.component.scss']
 })
-export class EntitiesListComponent {
+export class EntitiesListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  animal: string = '';
-  name: string = '';
-
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+  displayedColumns: string[] = ['enT_Nombre', 'grp_Ent_Nombre', 'status', 'actions'];
+  dataSource: MatTableDataSource<EntityDto>;
+  getEntities$: Subscription = new Subscription();
+  deleteEntity$: Subscription = new Subscription();
+  isSpinnerLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private pagesService: PagesService, private toastr: ToastrService) {
+    this.dataSource = new MatTableDataSource();
+  }
 
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
-
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+  ngOnInit(): void {
+    this.getEntities$ = this.pagesService.getEntities().subscribe((res: ResponseEntity) => {
+      this.dataSource = new MatTableDataSource(res.entidades);
+      this.isSpinnerLoading = false;
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-                    
+
+  ngOnDestroy(): void {
+    this.getEntities$.unsubscribe();
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -76,32 +55,79 @@ export class EntitiesListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  /** Builds and returns a new User. */
-createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
-
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}
 
   openUserDialog(): void {
     const dialogRef = this.dialog.open(EntitiesDialogComponent, {
-      data: {name: this.name, animal: this.animal},
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+      this.getEntities$ = this.pagesService.getEntities().subscribe((res: ResponseEntity) => {
+        this.dataSource = new MatTableDataSource(res.entidades);
+      });
     });
   }
-  
+
+  deleteEntity(entity: EntityDto) {
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Alerta',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      text: `Está seguro de querer eliminar la entidad: ${entity.enT_Nombre}?`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteEntity$ = this.pagesService.deleteEntity(entity.enT_ID).subscribe({
+          next: (response: ResponseEntity) => {
+            if(response.success) {
+              this.toastr.success('Entidad eliminada correctamente', 'Exito', {
+                progressBar: true,
+              });
+              this.pagesService.getEntities().subscribe((res) => {
+                this.dataSource = new MatTableDataSource(res.entidades);
+              });
+            } else if(!response.success && response.errorNo == 1451) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response.message,
+              })
+            } else {
+              this.toastr.error('No se pudo eliminar la entidad correctamente', 'Error', {
+                progressBar: true,
+              });
+            }
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      }
+    });
+  }
+
+  editEntity(entity: EntityDto) {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = entity;
+
+    const dialogRefEdit = this.dialog.open(
+      EntitiesDialogComponent,
+      dialogConfig
+    );
+
+    dialogRefEdit.afterClosed().subscribe((result) => {
+
+      if(!result.isRefreshing)
+        return;
+
+      this.getEntities$ = this.pagesService.getEntities().subscribe((res) => {
+        this.dataSource = new MatTableDataSource(res.entidades);
+      });
+    });
+  }
+
 }

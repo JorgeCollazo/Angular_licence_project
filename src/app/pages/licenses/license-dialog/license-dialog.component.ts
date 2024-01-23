@@ -4,11 +4,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Menu } from 'src/app/security/menus/interfaces/menu.intereface';
 import { SecurityService } from 'src/app/security/security.service';
 import Swal from 'sweetalert2';
+import { License } from '../interface/license.interface';
+import { ToastrService } from 'ngx-toastr';
 
-export interface DialogData {
-  animal: string;
-  name: string;
-}
 
 @Component({
   selector: 'app-license-dialog',
@@ -17,24 +15,25 @@ export interface DialogData {
 })
 export class LicenseDialogComponent {
 
-  menuDialogForm!: FormGroup;
+  licenciaDialogForm!: FormGroup;
   disableClose: boolean = false;
-  
+  isEditing: boolean;
   isSelectDisabled: boolean = true;
-  
+
   constructor(
     public dialogRef: MatDialogRef<LicenseDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: License,
     private fb: FormBuilder,
-    private security: SecurityService
+    private security: SecurityService,
+    private toastr: ToastrService
   ) {
-
-    this.menuDialogForm = fb.group({
-      name: [null],
-      link: [null],
+    this.isEditing = !!data;
+    this.licenciaDialogForm = fb.group({
+      code: [data ? data.cod_Lic : ''],
+      company: [''],
       orden: [null],
       nivel: [null],
-      parent: [{ value: null, disabled: true }], 
+      parent: [{ value: null, disabled: true }],
       description: [null],
       activeChbx:false,
       isSubmenuChbx:false,
@@ -44,35 +43,54 @@ export class LicenseDialogComponent {
   }
 
   onSaveClick(): void {
-    if(this.menuDialogForm.invalid) {
+    if(this.licenciaDialogForm.invalid) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Hay errores en el formulario'
       })
     } else {
-      console.log('this.menuDialogForm.value>>>>>>>>', this.menuDialogForm.value);
+
       const dataDialog: Menu = {
-        consulta: "",
-        usu_accion: -1,
-        nombre: this.menuDialogForm.value.name,
-        status: Number(this.menuDialogForm.value.activeChbx),
-        sw_admin: Number(this.menuDialogForm.value.adminChbx),
-        descripcion: this.menuDialogForm.value.description,
-        nivel: this.menuDialogForm.value.nivel,
-        link: this.menuDialogForm.value.link,
-        sw_display: Number(this.menuDialogForm.value.showChbx),
+        nombre: this.licenciaDialogForm.value.name,
+        status: Number(this.licenciaDialogForm.value.activeChbx),
+        sw_admin: Number(this.licenciaDialogForm.value.adminChbx),
+        descripcion: this.licenciaDialogForm.value.description,
+        nivel: this.licenciaDialogForm.value.nivel,
+        link: this.licenciaDialogForm.value.link,
+        sw_display: Number(this.licenciaDialogForm.value.showChbx),
         id_menu: -1,
-        orden: this.menuDialogForm.value.orden,
-        padre: this.menuDialogForm.value.parent
+        orden: this.licenciaDialogForm.value.orden,
+        padre: this.licenciaDialogForm.value.parent
       }
       this.security.saveMenu(dataDialog)
+      .subscribe({
+        next: (response) => {
+          if(response.success) {
+            this.toastr.success('Licencia añadida correctamente', 'Exito', {progressBar: true});
+            this.dialogRef.close({isRefreshing: true});
+          } else {
+            this.toastr.error('No ha sido posible añadir la licencia correctamente', 'Error', {progressBar: true});
+          }
+        },
+        error: () => {
+          this.toastr.error('Ha habido un error en el servidor', 'Error', {progressBar: true});
+        },
+      })
     }
 
   }
 
-  setParentSelect(selection: boolean) {
-    this.isSelectDisabled = !selection;
+  editLicense() {
+
   }
-  
+
+  close() {
+    this.dialogRef.close({isRefreshing: false});
+  }
+
+  // setParentSelect(selection: boolean) {
+  //   this.isSelectDisabled = !selection;
+  // }
+
 }

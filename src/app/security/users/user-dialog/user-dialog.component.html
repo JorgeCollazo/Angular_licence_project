@@ -1,33 +1,45 @@
-<h1 mat-dialog-title>Añadir usuario</h1>
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Usuario</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Usuario</h1>
 <div mat-dialog-content>
   <form [formGroup]="userDialogForm">
     <div class="container-1">
       <mat-form-field>
-        <mat-label>Nombre</mat-label>
-        <input matInput [formControlName]="'name'">
+        <mat-label>Email</mat-label>
+        <input matInput [formControlName]="'email'" type="email">
+      </mat-form-field>
+      <!-- <div *ngIf="userDialogForm.get('email')?.hasError('required') && userDialogForm.get('email')?.touched">
+        Email requerido.
+      </div>
+      <div *ngIf="userDialogForm.get('email')?.hasError('email') && userDialogForm.get('email')?.touched && !isEditing">
+        Correo inválido
+      </div> -->
+      <mat-form-field>
+        <mat-label>Contraseña</mat-label>
+        <input matInput [formControlName]="'password'" [placeholder]="isEditing ? '[-Sin cambios-]' : ''">
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field>
+        <mat-label>Rol</mat-label>
+        <mat-select [formControlName]="'rol_id'">
+          <mat-option *ngFor="let rol of roles" [value]="rol.rol_id">
+            {{rol.nombre}}
+          </mat-option>
+      </mat-select>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Cédula</mat-label>
         <input matInput [formControlName]="'cedula'">
       </mat-form-field>
     </div>
-    <div class="container-2">
-      <mat-form-field class="example-full-width">
-        <mat-label>Rol</mat-label>
-        <mat-select [formControlName]="'rol'" #rol_select>
-          <mat-option>
-
-          </mat-option>
-      </mat-select>
-      </mat-form-field>
-    </div>
     <div class="container-3">
       <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
-      <mat-checkbox formControlName="superAdminChbx">Super Administrador</mat-checkbox>
+      <mat-checkbox formControlName="adminChbx">Super Administrador</mat-checkbox>
     </div>
   </form>
 </div>
 <div mat-dialog-actions class="mat-dialog-actions-custom">
-  <button mat-raised-button color="primary" (click)="onNoClick()">Guardar</button>
-  <button mat-raised-button color="warn" [mat-dialog-close]="data.animal" cdkFocusInitial>Cerrar</button>
+  <button mat-raised-button color="primary" (click)="saveUser()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editUser()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
 </div>

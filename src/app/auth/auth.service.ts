@@ -19,16 +19,17 @@ export class AuthService {
 
   private token: string = '';
   private userID: number | null = null;
+  private rolID: number = -1;
   private isAuthenticated: boolean = false;
   private authStatusSub = new Subject<boolean>();
   private menu$ = new Subject<Permission[]>();
-  
+
   private transformedMenu: INavbarData[] = [];
 
   // private transformedMenu$ = new Subject<Boolean>();
-  
+
   constructor(private http: HttpClient, private router: Router) { }
-  
+
   getToken() {
     return this.token;
   }
@@ -37,14 +38,18 @@ export class AuthService {
     return this.userID;
   }
 
+  getUserRolID() {
+    return this.rolID;
+  }
+
   getIsAuthenticated() {
     return this.isAuthenticated;
   }
-  
+
   getMenuSub() {
     return this.menu$.asObservable();
   }
-  
+
   // getTransformedMenuSub() {
   //   return this.transformedMenu$.asObservable();
   // }
@@ -53,7 +58,7 @@ export class AuthService {
     return this.authStatusSub.asObservable();
   }
 
-  loginUser(email: string, password: string) { 
+  loginUser(email: string, password: string) {
     const authData: AuthData = { User: email, Pwd: password}
     this.http.post<userLoginData>(BACKEND_URL + 'authenticate', authData)
     .subscribe({
@@ -61,11 +66,12 @@ export class AuthService {
         const token = res.token;
         if(token) {
           this.userID = res.usuario.usuario_id
+          this.rolID = res.usuario.rol_id
           this.menu$.next(res.permisos);
           this.getTransformedMenu(res.permisos);
           this.isAuthenticated = true;
-          this.authStatusSub.next(true);     
-          this.saveAuthData(token, JSON.stringify(this.userID));
+          this.authStatusSub.next(true);
+          this.saveAuthData(token, this.userID.toString(), this.rolID.toString());
           this.router.navigate(['/navigation'])
         } else {
           this.authStatusSub.next(false);
@@ -103,9 +109,10 @@ export class AuthService {
     localStorage.removeItem('_menu');
   }
 
-  saveAuthData(token: string, userID: string) {
+  saveAuthData(token: string, userID: string, rolID: string) {
     localStorage.setItem('_token', token);
     localStorage.setItem('_userID', userID);
+    localStorage.setItem('_rolID', rolID);
   }
 
   saveMenu(menu: INavbarData) {
@@ -147,7 +154,7 @@ export class AuthService {
     organizedArr[2].parentID=2;
     organizedArr[5].parentID=2;
     console.log('OriginalArray>>>>', menu);
-    
+
     for(let i=0; i<organizedArr.length; i++) {
 
       if(organizedArr[i].parentID !== -1) {

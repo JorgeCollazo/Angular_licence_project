@@ -1,68 +1,55 @@
-import { Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { RoleData } from './role-data.interface';
 import { RoleDialogComponent } from '../role-dialog/role-dialog.component';
-
-const FRUITS: string[] = [
-  'blueberry',
-  'lychee',
-  'kiwi',
-  'mango',
-  'peach',
-  'lime',
-  'pomegranate',
-  'pineapple',
-];
-const NAMES: string[] = [
-  'Maia',
-  'Asher',
-  'Olivia',
-  'Atticus',
-  'Amelia',
-  'Jack',
-  'Charlotte',
-  'Theodore',
-  'Isla',
-  'Oliver',
-  'Isabella',
-  'Jasper',
-  'Cora',
-  'Levi',
-  'Violet',
-  'Arthur',
-  'Mia',
-  'Thomas',
-  'Elizabeth',
-];
+import { Subscription } from 'rxjs';
+import { SecurityService } from '../../security.service';
+import { Role } from '../interfaces/role.interface';
+import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-role-list',
   templateUrl: './role-list.component.html',
-  styleUrls: ['./role-list.component.scss']
+  styleUrls: ['./role-list.component.scss'],
 })
-export class RoleListComponent {
-
-  animal: string = '';
-  name: string = '';
-
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<RoleData>;
+export class RoleListComponent implements OnInit, AfterViewInit, OnDestroy {
+  displayedColumns: string[] = ['nombre', 'descripcion', 'status', 'actions'];
+  dataSource: MatTableDataSource<Role>;
+  isSpinnerLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public dialog: MatDialog) {
+  getRoles$: Subscription = new Subscription();
+  deleteRol$: Subscription = new Subscription();
 
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
-
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+  constructor(
+    public dialog: MatDialog,
+    private securityService: SecurityService,
+    private toastr: ToastrService
+  ) {
+    this.dataSource = new MatTableDataSource();
   }
+
+  ngOnInit(): void {
+    this.getRoles$ = this.securityService.getRoles().subscribe((res) => {
+      // this.parentsMenu = res.menus.filter((menu: Menu) => menu.padre == 0)
+      this.dataSource = new MatTableDataSource(res.roles);
+      this.isSpinnerLoading = false;
+    });
+  }
+
+  ngOnDestroy(): void {}
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -77,31 +64,64 @@ export class RoleListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  /** Builds and returns a new User. */
-createNewUser(id: number): RoleData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
 
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}
-
-  openUserDialog(): void {
+  openRolesDialog(): void {
     const dialogRef = this.dialog.open(RoleDialogComponent, {
-      data: {name: this.name, animal: this.animal},
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+    dialogRef.afterClosed().subscribe((result) => {
+      this.getRoles$ = this.securityService.getRoles().subscribe((res) => {
+        this.dataSource = new MatTableDataSource(res.roles);
+      });
     });
   }
 
+  editRol(rol: Role) {
+    
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = rol;
+
+    const dialogRefEdit =this.dialog.open(RoleDialogComponent, dialogConfig);
+
+    dialogRefEdit.afterClosed().subscribe((result) => {
+      this.getRoles$ = this.securityService.getRoles().subscribe((res) => {
+        this.dataSource = new MatTableDataSource(res.roles);
+      });
+    });
+  }
+
+  deleteRol(rol: Role) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Alerta',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      text: `Está seguro de querer eliminar el rol: ${rol.nombre}?`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteRol$ = this.securityService
+          .deleteRol(rol)
+          .subscribe({
+            next: () => {
+              this.toastr.success('Rol eliminado correctamente', 'Exito', {
+                progressBar: true,
+              });
+              this.securityService.getRoles().subscribe((res) => {
+                this.dataSource = new MatTableDataSource(res.roles);
+              });
+            },
+            error: (err) => {
+              console.log(err);
+            },
+          });
+      }
+    });
+  }
+
+  asignPermissions() {
+    
+  }
 }

@@ -11,16 +11,16 @@
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      <!-- Serial Column -->
+      <ng-container matColumnDef="serial">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Serial </th>
+        <td mat-cell *matCellDef="let row"> {{row.serial}} </td>
       </ng-container>
 
-      <!-- Progress Column -->
-      <ng-container matColumnDef="progress">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
-        <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+      <!-- Mac Column -->
+      <ng-container matColumnDef="mac">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> MAC </th>
+        <td mat-cell *matCellDef="let row"> {{row.mac}} </td>
       </ng-container>
 
       <!-- Name Column -->
@@ -29,10 +29,29 @@
         <td mat-cell *matCellDef="let row"> {{row.name}} </td>
       </ng-container>
 
-      <!-- Fruit Column -->
-      <ng-container matColumnDef="fruit">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fruit </th>
-        <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+     <!-- Status Column -->
+     <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-chip-listbox>
+          <mat-chip [style.backgroundColor]="row.sw_Activo == 1 ? '#43b943' : '#808080'">
+            {{ row.sw_Activo == 1 ? 'Activo' : 'Inactivo' }}
+          </mat-chip>
+        </mat-chip-listbox>
+      </td>
+    </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row" class="actions-column" class="actions_column_width">
+          <button mat-icon-button matTooltip="Editar menú" (click)="editDevice(row)">
+            <mat-icon class="edit_icon_color">edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Eliminar menú" (click)="deleteDevice(row)">
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

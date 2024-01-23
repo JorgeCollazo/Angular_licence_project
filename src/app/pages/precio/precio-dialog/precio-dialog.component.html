@@ -1,0 +1,39 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir precio</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar precio</h1>
+<div mat-dialog-content>
+  <form [formGroup]="priceDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'nombre'">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Monto</mat-label>
+        <input matInput [formControlName]="'monto'">
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field>
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [formControlName]="'description'"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="container-3">
+      <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editPrice()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>
+
+
+
+
+
+
+
+
+

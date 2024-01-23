@@ -12,6 +12,7 @@ import { SharedModule } from '../shared/shared/shared.module';
 // import {MatChipsModule} from '@angular/material/chips';
 import { MenuDialogComponent } from './menus/menu-dialog/menu-dialog.component';
 import { MenuListComponent } from './menus/menu-list/menu-list.component';
+import { RolesMenuComponent } from './roles-menu/roles-menu.component';
 @NgModule({
   declarations: [
     UserListComponent,
@@ -20,6 +21,7 @@ import { MenuListComponent } from './menus/menu-list/menu-list.component';
     RoleDialogComponent,
     MenuListComponent,
     MenuDialogComponent,
+    RolesMenuComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,7 @@ import { MenuListComponent } from './menus/menu-list/menu-list.component';
     ReactiveFormsModule,
   ],
   exports: [
-    MaterialModule,
+    // MaterialModule,
     SecurityRoutingModule,
   ]
 })

@@ -1,5 +1,5 @@
-.container-3 mat-form-field {
-  width: 96%;
+.container-1 mat-form-field, .container-2 mat-form-field {
+  width: 95%;
 }
 
 mat-form-field {
@@ -8,9 +8,4 @@ mat-form-field {
 
 .mat-dialog-actions-custom {
   justify-content: end;
-}
-
-.container-4 {
-	display: flex;
-	justify-content: space-between;
 }

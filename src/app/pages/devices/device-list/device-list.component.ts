@@ -1,42 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserData } from 'src/app/security/users/user-list/user-data.interface';
 import { DeviceDialogComponent } from '../device-dialog/device-dialog.component';
-
-const FRUITS: string[] = [
-  'blueberry',
-  'lychee',
-  'kiwi',
-  'mango',
-  'peach',
-  'lime',
-  'pomegranate',
-  'pineapple',
-];
-const NAMES: string[] = [
-  'Maia',
-  'Asher',
-  'Olivia',
-  'Atticus',
-  'Amelia',
-  'Jack',
-  'Charlotte',
-  'Theodore',
-  'Isla',
-  'Oliver',
-  'Isabella',
-  'Jasper',
-  'Cora',
-  'Levi',
-  'Violet',
-  'Arthur',
-  'Mia',
-  'Thomas',
-  'Elizabeth',
-];
+import { DeviceData } from '../interface/device.interface';
+import { Subscription } from 'rxjs';
+import { PagesService } from '../../pages.service';
+import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-device-list',
@@ -44,29 +17,37 @@ const NAMES: string[] = [
   styleUrls: ['./device-list.component.scss']
 })
 
-export class DeviceListComponent {
+export class DeviceListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  animal: string = '';
-  name: string = '';
-
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+  displayedColumns: string[] = ['serial', 'mac', 'status', 'actions'];
+  dataSource: MatTableDataSource<DeviceData>;
+  getDevices$: Subscription = new Subscription();
+  deleteDevice$: Subscription = new Subscription();
+  isSpinnerLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private pagesService: PagesService, private toastr: ToastrService) {
 
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
+    this.dataSource = new MatTableDataSource();
+  }
 
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+  ngOnInit(): void {
+    this.getDevices$ = this.pagesService.getDevices().subscribe((res) => {
+      this.dataSource = new MatTableDataSource(res.dispositivos);
+      this.isSpinnerLoading = false;
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.getDevices$.unsubscribe();
+    this.deleteDevice$.unsubscribe();
   }
 
   applyFilter(event: Event) {
@@ -77,31 +58,65 @@ export class DeviceListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  /** Builds and returns a new User. */
-createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
-
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}
 
   openUserDialog(): void {
     const dialogRef = this.dialog.open(DeviceDialogComponent, {
-      data: {name: this.name, animal: this.animal},
+      data: {},
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.animal = result;
+    });
+  }
+
+  editDevice(device: DeviceData) {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = device;
+
+    const dialogRefEdit = this.dialog.open(
+      DeviceDialogComponent,
+      dialogConfig
+    );
+
+    dialogRefEdit.afterClosed().subscribe((result) => {
+
+      if(!result.editing)
+        return;
+
+      this.getDevices$ = this.pagesService.getDevices().subscribe((res) => {
+        this.dataSource = new MatTableDataSource(res.dispositivos);
+      });
+    });
+  }
+
+  deleteDevice(device: DeviceData) {
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Alerta',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      text: `Está seguro de querer eliminar el dispositivo: ${device.serial}?`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteDevice$ = this.pagesService.deleteDevice(device.id_Disp).subscribe({
+          next: () => {
+            this.toastr.success('Dispositivo eliminado correctamente', 'Exito', {
+              progressBar: true,
+            });
+            this.pagesService.getEntities().subscribe((res) => {
+              // this.dataSource = new MatTableDataSource(res.dispositivos);
+            });
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      }
     });
   }
 }
