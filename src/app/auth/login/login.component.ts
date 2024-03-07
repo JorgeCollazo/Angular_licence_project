@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     //     this.isLoading = false;
     //   }
     // )
+    this.document.body.classList.remove('dark-mode');
   }
 
   onLogin(loginForm: NgForm) {
@@ -34,7 +35,7 @@ export class LoginComponent implements OnInit {
     if(loginForm.invalid) {
       return;
     }
-    // this.isLoading = true;
+    this.isLoading = true;
     this.authService.loginUser(loginForm.value.email, loginForm.value.password);
     this.authService.getAuthStatusSub()
       .subscribe(res => {

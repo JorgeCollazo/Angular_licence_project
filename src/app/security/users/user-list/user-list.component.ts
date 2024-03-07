@@ -1,46 +1,14 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import { UserData } from './user-data.interface';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
-// import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-/** Constants used to fill up our data base. */
-const FRUITS: string[] = [
-  'blueberry',
-  'lychee',
-  'kiwi',
-  'mango',
-  'peach',
-  'lime',
-  'pomegranate',
-  'pineapple',
-];
-const NAMES: string[] = [
-  'Maia',
-  'Asher',
-  'Olivia',
-  'Atticus',
-  'Amelia',
-  'Jack',
-  'Charlotte',
-  'Theodore',
-  'Isla',
-  'Oliver',
-  'Isabella',
-  'Jasper',
-  'Cora',
-  'Levi',
-  'Violet',
-  'Arthur',
-  'Mia',
-  'Thomas',
-  'Elizabeth',
-];
-
+import { SecurityService } from '../../security.service';
+import { User } from '../interfaces/user.interface';
+import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-list',
@@ -48,29 +16,40 @@ const NAMES: string[] = [
   styleUrls: ['./user-list.component.scss'],
 })
 
-export class UserListComponent implements AfterViewInit {
+export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  animal: string = '';
-  name: string = '';
+  displayedColumns: string[] = ['email', 'cedula', 'rol', 'estado', 'actions'];
+  dataSource: MatTableDataSource<User>;
 
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+  private users$: Subscription = new Subscription();
+  private deleteUsuario$: Subscription = new Subscription();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public dialog: MatDialog) {
-
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => this.createNewUser(k + 1));
-
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+  constructor(
+    public dialog: MatDialog,
+    private securityService: SecurityService,
+    private toastr: ToastrService
+    ) {
+    this.dataSource = new MatTableDataSource();
   }
 
-  ngAfterViewInit() {
+  ngOnInit(): void {
+    this.users$ = this.securityService.getUsers()
+      .subscribe(users => {
+        this.dataSource = new MatTableDataSource(users.usuarios);
+      });
+  }
+
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.users$.unsubscribe();
+    this.deleteUsuario$.unsubscribe();
   }
 
   applyFilter(event: Event) {
@@ -81,30 +60,62 @@ export class UserListComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  /** Builds and returns a new User. */
-createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
-
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}
 
   openUserDialog(): void {
     const dialogRef = this.dialog.open(UserDialogComponent, {
-      data: {name: this.name, animal: this.animal},
+      disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+    dialogRef.afterClosed().subscribe((result) => {
+      this.users$ = this.securityService.getUsers().subscribe((users) => {
+        this.dataSource = new MatTableDataSource(users.usuarios);
+      });
     });
   }
-}
+
+  deleteUsuario(usuario: User): void {
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Alerta',
+        showCancelButton: true,
+        confirmButtonText: 'Eliminar',
+        text: `Está seguro de querer eliminar el usuario: ${usuario.email}?`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteUsuario$ = this.securityService.deleteUser(usuario.usuario_id).subscribe({
+            next: () => {
+              this.toastr.success('Usuario eliminado correctamente', 'Exito', {
+                progressBar: true,
+              });
+              this.users$ = this.securityService.getUsers().subscribe((res) => {
+                this.dataSource = new MatTableDataSource(res.usuarios);
+              });
+            },
+            error: (err) => {
+              this.toastr.error(`Error al eliminar el usuario ${usuario.email}`, 'Exito', {
+                progressBar: true,
+              });
+              console.log(err);
+            },
+          });
+        }
+      });
+    }
+
+    editUser(user: User): void {
+
+      const dialogConfig = new MatDialogConfig();
+
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = user;
+
+      const dialogRefEdit = this.dialog.open(UserDialogComponent, dialogConfig);
+
+      dialogRefEdit.afterClosed().subscribe((result) => {
+        this.users$ = this.securityService.getUsers().subscribe((res) => {
+          this.dataSource = new MatTableDataSource(res.usuarios);
+        });
+      });
+    }
+  }

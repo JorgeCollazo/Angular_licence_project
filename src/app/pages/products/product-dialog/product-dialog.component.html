@@ -1,0 +1,34 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Producto</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Producto</h1>
+<div mat-dialog-content>
+  <form [formGroup]="productDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'name'">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Licencias</mat-label>
+        <mat-select [formControlName]="'license_id'">
+          <mat-option *ngFor="let license of licenses" [value]="license.tipo_Lic_Id">
+            {{license.cod_Lic}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="container-3">
+      <mat-form-field>
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [formControlName]="'description'"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="container-4">
+      <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editProduct()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>

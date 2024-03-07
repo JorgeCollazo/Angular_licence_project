@@ -1,0 +1,39 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Licencia</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Licencia</h1>
+<div mat-dialog-content>
+  <form [formGroup]="licenciaDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Código</mat-label>
+        <input matInput [formControlName]="'code'">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Compañía</mat-label>
+        <mat-select [formControlName]="'company'">
+          <mat-option>
+
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field>
+        <mat-label>Tipo de Licencia</mat-label>
+        <mat-select [formControlName]="'license_type'">
+          <mat-option>
+
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Nivel</mat-label>
+        <input matInput [formControlName]="'nivel'">
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editLicense()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>

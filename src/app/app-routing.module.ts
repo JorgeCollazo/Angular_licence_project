@@ -5,7 +5,7 @@ import { authGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
-  { path: 'navigation', component: NavigationComponent, canActivate: [authGuard], 
+  { path: 'navigation', component: NavigationComponent, canActivate: [authGuard],
     children: [
       { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
       { path: 'security', loadChildren: () => import('./security/security.module').then(m => m.SecurityModule) },
@@ -19,4 +19,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { } 
+export class AppRoutingModule { }

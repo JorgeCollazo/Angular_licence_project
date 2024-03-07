@@ -1,0 +1,28 @@
+// .container {
+  
+// }
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  font-weight: bolder;
+}
+
+.actions_column_width {
+  width: 17%; 
+}
+
+.viewPortHeight {
+  height: 75vh;
+}
+
+.centerSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

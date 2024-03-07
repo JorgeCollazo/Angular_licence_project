@@ -1,0 +1,28 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir Entidad</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar Entidad</h1>
+<div mat-dialog-content>
+  <form [formGroup]="EntityDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'name'">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Compañías</mat-label>
+        <mat-select [formControlName]="'company_id'">
+          <mat-option *ngFor="let company of companies" [value]="company.grp_Ent_Id">
+            {{company.grp_Nombre}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-checkbox formControlName="isActive">Activo</mat-checkbox>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editEntity()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>

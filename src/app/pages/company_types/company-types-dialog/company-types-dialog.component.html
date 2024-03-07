@@ -1,0 +1,29 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir tipo de Compañía</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar tipo de Compañía</h1>
+<div mat-dialog-content>
+  <form [formGroup]="companyTypeDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'name'">
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editCompanyType()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>
+
+
+
+
+
+
+
+
+

@@ -1,15 +1,30 @@
 <h1 mat-dialog-title>Añadir rol</h1>
 <div mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
+  <form [formGroup]="roleDialogForm">
+    <div class="container-1">
+      <mat-form-field class="custom-margin-right">
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'name'">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Nivel</mat-label>
+        <input matInput [formControlName]="'nivel'">
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field class="w-100">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [formControlName]="'descripcion'"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="container-3">
+      <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
+      <mat-checkbox formControlName="adminChbx">Super Administrador</mat-checkbox>
+    </div>
+  </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="saveRol()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editRol()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
 </div>
