@@ -84,7 +84,6 @@ export class AuthService {
       },
       error: (err) => {
         this.authStatusSub.next(false);
-        console.log('err>>>>', err);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -122,7 +121,6 @@ export class AuthService {
   getTransformedMenu(menu: Permission[]): void {
     // const menuString = localStorage.getItem('_menu') ?? '';
     // this.menu = JSON.parse(menuString)
-    console.log("this.menu>>>>>>>>>", menu);
     let organizedMenu: INavbarData[] = [];
     this.transformedMenu = menu.map((x:Permission) => {
       const menuItem: INavbarData = {
@@ -144,7 +142,6 @@ export class AuthService {
       return menuItem;
     })
 
-    console.log('this.transformedMenu>>>>>>>>>>>>>', this.transformedMenu);
     organizedMenu = this.organizeArr(this.transformedMenu);
     localStorage.setItem('_menu', JSON.stringify(organizedMenu));
   }
@@ -153,7 +150,6 @@ export class AuthService {
     const organizedArr: INavbarData[] = [...menu];
     organizedArr[2].parentID=2;
     organizedArr[5].parentID=2;
-    console.log('OriginalArray>>>>', menu);
 
     for(let i=0; i<organizedArr.length; i++) {
 
@@ -165,7 +161,6 @@ export class AuthService {
         }
       }
     }
-    console.log('FinalArray>>>>', organizedArr);
     return organizedArr;
   }
 }

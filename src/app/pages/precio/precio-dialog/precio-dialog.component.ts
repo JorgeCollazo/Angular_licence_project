@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PriceData } from '../interface/precioData.interface';
+import { Price, ResponsePrice } from '../interface/precioData.interface';
 import { PagesService } from '../../pages.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ export class PrecioDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<PrecioDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: PriceData,
+    @Inject(MAT_DIALOG_DATA) public data: Price,
     private fb: FormBuilder,
     private pagesService: PagesService,
     private toastr: ToastrService
@@ -52,17 +52,18 @@ export class PrecioDialogComponent {
         text: 'Hay errores en el formulario'
       })
     } else {
-      const dataDialog: Partial<PriceData> = {
+      const dataDialog: Partial<Price> = {
         nombre: this.priceDialogForm.value.nombre,
         descripcion: this.priceDialogForm.value.descripcion,
-        monto: this.priceDialogForm.value.monto,
+        monto: parseFloat(this.priceDialogForm.value.monto) ? parseFloat(this.priceDialogForm.value.monto) : 0,
         usuario_Id: this.userID,
         sw_Activo: Number(this.priceDialogForm.value.activeChbx),
       }
-      this.pagesService.saveCompany(dataDialog)
+
+      this.pagesService.savePrice(dataDialog)
         .subscribe({
-          next: (response) => {
-            if(response.success) {
+          next: (res: ResponsePrice) => {
+            if(res.success) {
               this.toastr.success('Precio añadido correctamente', 'Exito', {progressBar: true});
               this.dialogRef.close({isRefreshing: true});
             } else {
@@ -78,18 +79,18 @@ export class PrecioDialogComponent {
 
   editPrice() {
 
-    const dataDialog: PriceData = {
+    const dataDialog: Price = {
       nombre: this.priceDialogForm.value.nombre,
       descripcion: this.priceDialogForm.value.descripcion,
       monto: this.priceDialogForm.value.monto,
       sw_Activo: Number(this.priceDialogForm.value.activeChbx),
-      id_Precio: this.priceDialogForm.value.id_precio,
+      id_Precio: this.data.id_Precio,
       usuario_Id: this.userID
     };
     this.editPrice$ = this.pagesService.editPrice(dataDialog)
     .subscribe({
-      next: (response) => {
-        if(response.success) {
+      next: (res: ResponsePrice) => {
+        if(res.success) {
           this.toastr.success('Campos actualizados correctamente', 'Exito', {progressBar: true});
           this.dialogRef.close({isRefreshing: true});
         } else {

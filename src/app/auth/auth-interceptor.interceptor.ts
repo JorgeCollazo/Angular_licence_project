@@ -25,15 +25,6 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
 
         return throwError(() => new Error('Error'));
       }),
-      // switchMap((event: HttpEvent<any>) => {
-      //   // If it's an HTTP response, check if it's a successful response
-      //   if (event instanceof HttpResponse) {
-      //     // You can add additional logic here if needed
-      //     console.log('Successful response:', event);
-      //   }
-      //   // Pass along the event
-      //   return of(event);
-      // })
     )
   }
 }

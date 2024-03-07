@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 
 export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  displayedColumns: string[] = ['name', 'description', 'lic_nombre', 'status', 'services', 'actions'];
+  displayedColumns: string[] = ['name', 'description', 'lic_nombre', 'mac_device', 'status', 'services', 'actions'];
   dataSource: MatTableDataSource<Product>;
   getProductos$: Subscription = new Subscription();
   deleteProducto$: Subscription = new Subscription();
@@ -68,9 +68,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getProductos$ = this.pagesService.getProductos().subscribe((res: ResponseProducto) => {
-        this.dataSource = new MatTableDataSource(res.productos);
-      });
+      this.getProducts();
     });
   }
 
@@ -81,9 +79,9 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res: ResponseProducto) => {
         if(!res.success) {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al cargar la lista de productos',
+            icon: 'info',
+            title: 'Información',
+            text: 'No existen productos aún ',
           })
         } else {
           this.dataSource = new MatTableDataSource(res.productos);
@@ -107,13 +105,23 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         this.deleteProducto$ = this.pagesService.deleteProduct(product.producto_Id).subscribe({
-          next: () => {
-            this.toastr.success('Producto eliminado correctamente', 'Exito', {
-              progressBar: true,
-            });
-            this.pagesService.getProductos().subscribe((res: ResponseProducto) => {
-              this.dataSource = new MatTableDataSource(res.productos);
-            });
+          next: (response: ResponseProducto) => {
+            if(response.success) {
+              this.toastr.success('Producto eliminado correctamente', 'Exito', {
+                progressBar: true,
+              });
+              this.getProducts();
+            } else if(!response.success && response.errorNo == 1451) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response.message,
+              })
+            } else {
+              this.toastr.error('No se pudo eliminar el producto correctamente', 'Error', {
+                progressBar: true,
+              });
+            }
           },
           error: (err) => {
             console.log(err);
@@ -137,7 +145,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     dialogRefEdit.afterClosed().subscribe((result) => {
 
-      if(!result.editing)
+      if(!result.isRefreshing)
         return;
 
       this.getProductos$ = this.pagesService.getProductos().subscribe((res) => {

@@ -1,4 +1,12 @@
 .header-container {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+}
+
+#back-button-ID {
+  align-self: center;
+}
+
+.payments_icon_color {
+  color: #48d448
 }

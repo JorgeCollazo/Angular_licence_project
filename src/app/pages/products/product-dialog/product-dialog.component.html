@@ -8,12 +8,30 @@
         <input matInput [formControlName]="'name'">
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Licencias</mat-label>
+        <mat-label>Dispositivo</mat-label>
+        <mat-select [formControlName]="'device_id'">
+          <mat-option *ngFor="let device of devices" [value]="device.id_Disp">
+            {{device.mac}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field>
+        <mat-label>Licencia</mat-label>
         <mat-select [formControlName]="'license_id'">
-          <mat-option *ngFor="let license of licenses" [value]="license.tipo_Lic_Id">
+          <mat-option *ngFor="let license of licenses" [value]="license.lic_Id">
             {{license.cod_Lic}}
           </mat-option>
-      </mat-select>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Servicios</mat-label>
+        <mat-select [formControlName]="'servicio_Id'" multiple>
+          <mat-option *ngFor="let service of services" [value]="service.servicio_Id">
+            {{service.nombre}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
     <div class="container-3">

@@ -13,6 +13,9 @@ import { CompanyTypesListComponent } from './company_types/company-types-list/co
 import { ServicesListComponent } from './services/services-list/services-list.component';
 import { PrecioListComponent } from './precio/precio-list/precio-list.component';
 import { ProductServicesListComponent } from './products/product-services-list/product-services-list.component';
+import { DeviceTypeListComponent } from './device_types/device-type-list/device-type-list.component';
+import { StatusTypesListComponent } from './status_types/status-types-list/status-types-list.component';
+import { StatusListComponent } from './status/status-list/status-list.component';
 
 const routes: Routes = [
   { path: 'companies-list', component: CompaniesListComponent },
@@ -22,12 +25,15 @@ const routes: Routes = [
   { path: 'products-list', component: ProductListComponent },
   { path: 'product-service-list', component: ProductServicesListComponent },
   { path: 'devices-list', component: DeviceListComponent },
+  { path: 'devices-type-list', component: DeviceTypeListComponent },
   { path: 'license-type-list', component: LicenseTypeListComponent },
   { path: 'license-list', component: LicenseListComponent },
   { path: 'payment-list', component: PaymentListComponent },
   { path: 'cxc-list', component: CxcListComponent },
   { path: 'services-list', component: ServicesListComponent },
   { path: 'precio-list', component: PrecioListComponent },
+  { path: 'status-types-list', component: StatusTypesListComponent },
+  { path: 'status-list', component: StatusListComponent },
 ];
 
 @NgModule({

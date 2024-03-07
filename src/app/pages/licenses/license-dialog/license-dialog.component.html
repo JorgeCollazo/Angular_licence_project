@@ -8,10 +8,10 @@
         <input matInput [formControlName]="'code'">
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Compañía</mat-label>
-        <mat-select [formControlName]="'company'">
-          <mat-option>
-
+        <mat-label>Estado</mat-label>
+        <mat-select [formControlName]="'status'">
+          <mat-option *ngFor="let s of status" [value]="s.id_est">
+            {{s.nombre}}
           </mat-option>
       </mat-select>
       </mat-form-field>
@@ -20,14 +20,10 @@
       <mat-form-field>
         <mat-label>Tipo de Licencia</mat-label>
         <mat-select [formControlName]="'license_type'">
-          <mat-option>
-
+          <mat-option *ngFor="let licenseType of licenseTypes" [value]="licenseType.tipo_Lic_Id">
+            {{licenseType.nombre}}
           </mat-option>
       </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Nivel</mat-label>
-        <input matInput [formControlName]="'nivel'">
       </mat-form-field>
     </div>
   </form>

@@ -12,9 +12,21 @@
     <table mat-table [dataSource]="dataSource" matSort>
 
       <!-- Nombre Column -->
-      <ng-container matColumnDef="nombre">2
+      <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-        <td mat-cell *matCellDef="let row"> {{row.grp_Nombre}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+      </ng-container>
+
+      <!-- Descripcion Column -->
+      <ng-container matColumnDef="descripcion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+        <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+      </ng-container>
+
+      <!-- Monto Column -->
+      <ng-container matColumnDef="monto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
+        <td mat-cell *matCellDef="let row"> {{row.monto}} </td>
       </ng-container>
 
        <!-- Status Column -->

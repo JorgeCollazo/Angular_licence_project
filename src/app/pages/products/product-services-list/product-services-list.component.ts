@@ -13,11 +13,12 @@ import {
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PagesService } from '../../pages.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductServicesDialogComponent } from '../product-services-dialog/product-services-dialog.component';
 
 @Component({
   selector: 'app-product-services-list',
@@ -27,11 +28,11 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductServicesListComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  displayedColumns: string[] = ['nombre', 'descripcion'];
+  displayedColumns: string[] = ['nombre', 'descripcion', 'monto', 'actions'];
   dataSource: MatTableDataSource<Service>;
-  getServices$: Subscription = new Subscription();
-  deleteCompany$: Subscription = new Subscription();
+  getServicesByProduct$: Subscription = new Subscription();
   isSpinnerLoading: Boolean = false;
+  productId: number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -40,22 +41,22 @@ export class ProductServicesListComponent
     public dialog: MatDialog,
     private pagesService: PagesService,
     private toastr: ToastrService,
-    private router: ActivatedRoute
+    private routerActivated: ActivatedRoute,
+    public router: Router,
   ) {
     this.dataSource = new MatTableDataSource();
   }
 
   ngOnInit(): void {
-
-    this.router.queryParams.subscribe(params => {
-      const productId = params['id'];
-      this.getServicesByProduct(productId);
+    this.getServicesByProduct$ = this.routerActivated.queryParams.subscribe(params => {
+      this.productId = params['id'];
+      this.getServicesByProduct(this.productId);
     });
-
-
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.getServicesByProduct$.unsubscribe();
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -72,13 +73,16 @@ export class ProductServicesListComponent
   }
 
   getServicesByProduct(id_product: number) {
-    this.getServices$ = this.pagesService.getServicesByProduct(id_product).subscribe({
+    this.getServicesByProduct$ = this.pagesService.getServicesByProduct(id_product).subscribe({
       next: (res: ResponseService) => {
         if (!res.success) {
           Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error al cargar la lista de servicios',
+            icon: 'info',
+            title: 'Información',
+            text: 'No existen servicios para este producto.',
+          }).then((result) => {
+            if(result.isConfirmed)
+              this.go_back();
           });
         } else {
           this.dataSource = new MatTableDataSource(res.servicios);
@@ -89,5 +93,30 @@ export class ProductServicesListComponent
         console.log(err);
       },
     });
+  }
+
+  editAmount(service: Service) {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {service: service, productID: this.productId};
+
+    const dialogRefEdit = this.dialog.open(
+      ProductServicesDialogComponent,
+      dialogConfig
+    );
+
+    dialogRefEdit.afterClosed().subscribe((result) => {
+
+      if(!result.isRefreshing)
+        return;
+
+        this.getServicesByProduct(this.productId);
+    });
+  }
+
+  go_back() {
+    this.router.navigate(['navigation/pages/products-list']);
   }
 }

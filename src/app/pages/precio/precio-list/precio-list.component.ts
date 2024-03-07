@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { PriceData } from '../interface/precioData.interface';
+import { Price } from '../interface/precioData.interface';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,8 +17,8 @@ import Swal from 'sweetalert2';
 })
 export class PrecioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  displayedColumns: string[] = ['nombre', 'status', 'actions'];
-  dataSource: MatTableDataSource<PriceData>;
+  displayedColumns: string[] = ['nombre', 'descripcion', 'monto', 'status', 'actions'];
+  dataSource: MatTableDataSource<Price>;
   getPrices$: Subscription = new Subscription();
   deletePrice$: Subscription = new Subscription();
   isSpinnerLoading: Boolean = false;
@@ -31,10 +31,7 @@ export class PrecioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getPrices$ = this.pagesService.getPrices().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res.precios);
-      this.isSpinnerLoading = false;
-    });
+    this.getPrices();
   }
 
   ngAfterViewInit() {
@@ -62,13 +59,18 @@ export class PrecioListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.getPrices$ = this.pagesService.getPrices().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res.precios);
-      });
+      this.getPrices();
     });
   }
 
-  editPrice(precio: PriceData) {
+  getPrices() {
+    this.getPrices$ = this.pagesService.getPrices().subscribe((res) => {
+      this.dataSource = new MatTableDataSource(res.precios);
+      this.isSpinnerLoading = false;
+    });
+  }
+
+  editPrice(precio: Price) {
 
     const dialogConfig = new MatDialogConfig();
 
@@ -85,13 +87,11 @@ export class PrecioListComponent implements OnInit, AfterViewInit, OnDestroy {
       if(!result.isRefreshing)
         return;
 
-      this.getPrices$ = this.pagesService.getPrices().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res.precios);
-      });
+      this.getPrices();
     });
   }
 
-  deletePrice(precio: PriceData) {
+  deletePrice(precio: Price) {
     Swal.fire({
       icon: 'warning',
       title: 'Alerta',

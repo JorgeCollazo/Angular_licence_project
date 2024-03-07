@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserData } from 'src/app/security/users/user-list/user-data.interface';
 import { LicenseDialogComponent } from '../license-dialog/license-dialog.component';
-import { License } from '../interface/license.interface';
+import { License, ResponseLicense } from '../interface/license.interface';
 import { Subscription } from 'rxjs';
 import { PagesService } from '../../pages.service';
 import Swal from 'sweetalert2';
@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 
 export class LicenseListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  displayedColumns: string[] = ['cod_Lic', 'actions'];
+  displayedColumns: string[] = ['cod_Lic', 'tipo_Lic_Nombre', 'status_Nombre', 'actions'];
   dataSource: MatTableDataSource<License>;
   getLicenses$: Subscription = new Subscription();
   deleteLicense$: Subscription = new Subscription();
@@ -33,10 +33,7 @@ export class LicenseListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getLicenses$ = this.pagesService.getLicenses().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res.licencias);
-      this.isSpinnerLoading = false;
-    });
+    this.getLicenses();
   }
 
   ngAfterViewInit() {
@@ -60,12 +57,41 @@ export class LicenseListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openUserDialog(): void {
     const dialogRef = this.dialog.open(LicenseDialogComponent, {
-      data: {},
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('im in');
+
+      this.getLicenses();
+    });
+  }
+
+  getLicenses() {
+    this.getLicenses$ = this.pagesService.getLicenses()
+    .subscribe({
+      next: (res: ResponseLicense) => {
+        if(res.success && res.licencias.length == 0) {
+          this.dataSource = new MatTableDataSource(res.licencias);
+          Swal.fire({
+            icon: 'info',
+            title: 'Información',
+            text: 'No existen licencias aún ',
+          })
+      } if(!res.success) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ha ocurrido un error en el servidor',
+        })
+      } else {
+        this.dataSource = new MatTableDataSource(res.licencias);
+        this.isSpinnerLoading = false;
+      }
+    },
+        error: (err: any) => {
+          console.log(err);
+        }
     });
   }
 
@@ -86,9 +112,7 @@ export class LicenseListComponent implements OnInit, AfterViewInit, OnDestroy {
       if(!result.isRefreshing)
         return;
 
-      this.getLicenses$ = this.pagesService.getLicenses().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res.licencias);
-      });
+      this.getLicenses();
     });
   }
 
