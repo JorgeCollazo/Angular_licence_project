@@ -16,8 +16,8 @@
       <mat-form-field>
         <mat-label>Tipo de Dispositivo</mat-label>
         <mat-select [formControlName]="'type_device'">
-          <mat-option>
-
+          <mat-option *ngFor="let deviceType of deviceTypes" [value]="deviceType.iD_Tipo_Disp">
+            {{deviceType.nombre}}
           </mat-option>
       </mat-select>
       </mat-form-field>

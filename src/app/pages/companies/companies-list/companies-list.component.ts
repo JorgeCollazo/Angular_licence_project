@@ -38,10 +38,7 @@ export class CompaniesListComponent
   }
 
   ngOnInit(): void {
-    this.getCompanies$ = this.pagesService.getCompanies().subscribe((res: ResponseCompany) => {
-      this.dataSource = new MatTableDataSource(res.grupoEntidades);
-      this.isSpinnerLoading = false;
-    });
+    this.getCompanies();
   }
 
   ngAfterViewInit() {
@@ -69,9 +66,14 @@ export class CompaniesListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.getCompanies$ = this.pagesService.getCompanies().subscribe((res: ResponseCompany) => {
-        this.dataSource = new MatTableDataSource(res.grupoEntidades);
-      });
+     this.getCompanies();
+    });
+  }
+
+  getCompanies() {
+    this.getCompanies$ = this.pagesService.getCompanies().subscribe((res: ResponseCompany) => {
+      this.dataSource = new MatTableDataSource(res.grupoEntidades);
+      this.isSpinnerLoading = false;
     });
   }
 
@@ -92,9 +94,7 @@ export class CompaniesListComponent
       if(!result.isRefreshing)
         return;
 
-      this.getCompanies$ = this.pagesService.getCompanies().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res.grupoEntidades);
-      });
+      this.getCompanies();
     });
   }
 
@@ -115,9 +115,7 @@ export class CompaniesListComponent
                 this.toastr.success('Compañía eliminada correctamente', 'Exito', {
                   progressBar: true,
                 });
-                this.pagesService.getCompanies().subscribe((res) => {
-                  this.dataSource = new MatTableDataSource(res.grupoEntidades);
-                });
+                this.getCompanies();
               } else if(!response.success && response.errorNo == 1451) {
                 Swal.fire({
                   icon: 'error',

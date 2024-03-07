@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LicenseTypeDialogComponent } from '../license-type-dialog/license-type-dialog.component';
-import { LicenseTypeData } from '../interface/licenseType.interface';
+import { LicenseType, ResponseLicenseType } from '../interface/licenseType.interface';
 import { Subscription } from 'rxjs';
 import { PagesService } from '../../pages.service';
 import Swal from 'sweetalert2';
@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 export class LicenseTypeListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   displayedColumns: string[] = ['name', 'description', 'status', 'actions'];
-  dataSource: MatTableDataSource<LicenseTypeData>;
+  dataSource: MatTableDataSource<LicenseType>;
   getLicenseTypes$: Subscription = new Subscription();
   deleteLicenseType$: Subscription = new Subscription();
   isSpinnerLoading: boolean = false;
@@ -32,10 +32,7 @@ export class LicenseTypeListComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.getLicenseTypes$ = this.pagesService.getLicenseType().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res.tipoLicencias);
-      this.isSpinnerLoading = false;
-    });
+    this.getLicenseTypes();
   }
 
   ngAfterViewInit() {
@@ -59,18 +56,22 @@ export class LicenseTypeListComponent implements OnInit, AfterViewInit, OnDestro
 
   openUserDialog(): void {
     const dialogRef = this.dialog.open(LicenseTypeDialogComponent, {
-      data: {},
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getLicenseTypes$ = this.pagesService.getLicenseType().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res.tipoLicencias);
-      });
+      this.getLicenseTypes();
     });
   }
 
-  editLicenseType(licenseType: LicenseTypeData) {
+  getLicenseTypes() {
+    this.getLicenseTypes$ = this.pagesService.getLicenseType().subscribe((res) => {
+      this.dataSource = new MatTableDataSource(res.tipoLicencias);
+      this.isSpinnerLoading = false;
+    });
+  }
+
+  editLicenseType(licenseType: LicenseType) {
 
     const dialogConfig = new MatDialogConfig();
 
@@ -87,13 +88,11 @@ export class LicenseTypeListComponent implements OnInit, AfterViewInit, OnDestro
       if(!result.isRefreshing)
         return;
 
-      this.getLicenseTypes$ = this.pagesService.getLicenseType().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res.tipoLicencias);
-      });
+      this.getLicenseTypes();
     });
   }
 
-  deleteLicenseType(licenseType: LicenseTypeData) {
+  deleteLicenseType(licenseType: LicenseType) {
 
     Swal.fire({
       icon: 'warning',
@@ -104,13 +103,23 @@ export class LicenseTypeListComponent implements OnInit, AfterViewInit, OnDestro
     }).then((result) => {
       if (result.isConfirmed) {
         this.deleteLicenseType$ = this.pagesService.deleteLicenseType(licenseType.tipo_Lic_Id).subscribe({
-          next: () => {
-            this.toastr.success('Tipo de licencia eliminada correctamente', 'Exito', {
-              progressBar: true,
-            });
-            this.pagesService.getLicenseType().subscribe((res) => {
-              this.dataSource = new MatTableDataSource(res.tipoLicencias);
-            });
+          next: (res: ResponseLicenseType) => {
+            if(res.success) {
+              this.toastr.success('Tipo de licencia eliminada correctamente', 'Exito', {
+                progressBar: true,
+              });
+              this.getLicenseTypes();
+            }else if(!res.success && res.errorNo == 1451) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: res.message,
+              })
+            } else {
+              this.toastr.error('No se pudo eliminar el tipo de licencia correctamente', 'Error', {
+                progressBar: true,
+              });
+            }
           },
           error: (err) => {
             console.log(err);

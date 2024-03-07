@@ -101,10 +101,6 @@ export class CompaniesDialogComponent implements OnInit, OnDestroy {
     })
   }
 
-  // setParentSelect(selection: boolean) {
-  //   this.isSelectDisabled = !selection;
-  // }
-
   close() {
     this.dialogRef.close({isRefreshing: false});
   }

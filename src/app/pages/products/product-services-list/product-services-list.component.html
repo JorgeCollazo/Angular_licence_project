@@ -1,6 +1,7 @@
 <div class="container">
   <app-header-page [title]="'Servicios del producto'" [fontSize]=24></app-header-page>
   <div class="header-container">
+    <button mat-raised-button color="primary" id="back-button-ID" (click)="go_back()">Regresar <mat-icon>arrow_back</mat-icon></button>
     <mat-form-field class="my-3">
       <mat-label>Buscar</mat-label>
       <input matInput  (keyup)="applyFilter($event)" #input>
@@ -22,13 +23,29 @@
         <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
       </ng-container>
 
+      <!-- Monto Column -->
+      <ng-container matColumnDef="monto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
+        <td mat-cell *matCellDef="let row"> {{row.monto}} </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row" class="actions-column" class="actions_column_width">
+          <button mat-icon-button matTooltip="Añadir/Editar montos" (click)="editAmount(row)">
+            <mat-icon class="payments_icon_color">monetization_on</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
       <!-- Row shown when there is no matching data. -->
-      <tr class="mat-row" *matNoDataRow>
+      <!-- <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspanme ="4">No data matching the filter "{{input.value}}"</td>
-      </tr>
+      </tr> -->
     </table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" #paginator></mat-paginator>

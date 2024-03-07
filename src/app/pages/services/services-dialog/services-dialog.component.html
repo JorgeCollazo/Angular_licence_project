@@ -7,14 +7,6 @@
         <mat-label>Nombre</mat-label>
         <input matInput [formControlName]="'nombre'">
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Productos</mat-label>
-        <mat-select [formControlName]="'product'" multiple>
-          <mat-option *ngFor="let product of products" [value]="product.producto_Id">
-            {{product.nombre}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
     </div>
     <div class="container-2">
       <mat-form-field>

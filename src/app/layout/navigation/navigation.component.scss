@@ -7,6 +7,10 @@ app-header-page {
   margin-top: 2rem;
 }
 
+mat-sidenav-content {
+  margin-left: 225px;
+}
+
 #menuToolBarID {
   flex-direction: inherit;
 }
@@ -17,7 +21,7 @@ app-header-page {
 }
 
 .sidenav {
-  width: 200px;
+  width: 225px;
   transition: background-color 0.3s;
 }
 

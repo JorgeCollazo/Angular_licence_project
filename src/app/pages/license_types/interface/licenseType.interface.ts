@@ -1,4 +1,4 @@
-export interface LicenseTypeData {
+export interface LicenseType {
   nombre: string;
   descripcion: string;
   sw_Activo: number;
@@ -7,3 +7,12 @@ export interface LicenseTypeData {
   sw_Mostrar: number;
   tipo_Lic_Id: number;
 }
+
+export interface ResponseLicenseType {
+  success: boolean;
+  message: string;
+  errorNo: number;
+  tipoLicencia: LicenseType,
+  tipoLicencias: LicenseType[]
+}
+

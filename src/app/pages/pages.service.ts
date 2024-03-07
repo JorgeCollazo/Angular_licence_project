@@ -5,15 +5,18 @@ import { Observable, catchError, shareReplay, throwError } from 'rxjs';
 import { Company, ResponseCompany } from './companies/interface/company.interface';
 import { environment } from 'src/environment/environment';
 import Swal from 'sweetalert2';
-import { Product, ResponseProducto } from './products/interface/productoData.interface';
-import { DeviceData } from './devices/interface/device.interface';
-import { License } from './licenses/interface/license.interface';
+import { Product, ProductServicePrice, ResponseProducto } from './products/interface/productoData.interface';
+import { Device, ResponseDevice } from './devices/interface/device.interface';
+import { License, ResponseLicense } from './licenses/interface/license.interface';
 import { Entity, EntityDto, ResponseEntity } from './entities/interface/entity.interface';
 import { CompanyTypeData } from './company_types/interface/company_type.interface';
-import { LicenseTypeData } from './license_types/interface/licenseType.interface';
+import { LicenseType, ResponseLicenseType } from './license_types/interface/licenseType.interface';
 import { Subsidiary } from './subsidiaries/interface/subsidiary.interface';
-import { Service } from './services/interface/serviceData.interface';
-import { PriceData } from './precio/interface/precioData.interface';
+import { ResponseService, Service } from './services/interface/serviceData.interface';
+import { Price, ResponsePrice } from './precio/interface/precioData.interface';
+import { DeviceType, DeviceTypeResponse } from './device_types/interface/device_type.interface';
+import { ResponseStatusTypes, StatusType } from './status_types/interface/status_license.interface';
+import { ResponseStatus, Status } from './status/interface/status.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -370,14 +373,6 @@ getProductos(): Observable<ResponseProducto>{
   return this.http.get<ResponseProducto>(`${environment.apiURL}/Producto`, {headers: headers})
     .pipe(
       catchError(err => {
-        // const message = 'Error al cargar la lista de productos';
-
-        // Swal.fire({
-        //   icon: 'error',
-        //   title: 'Error',
-        //   text: message
-        // })
-
         return throwError(() => new Error(err));
       }),
       shareReplay()
@@ -406,7 +401,7 @@ saveProduct(product: Partial<Product>): Observable<any> {
     )
 }
 
-deleteProduct(producto_Id: number) {
+deleteProduct(producto_Id: number): Observable<any> {
 
   const headers = this.securityService.setHeadersAuth();
 
@@ -451,14 +446,71 @@ editProduct(product: Product): Observable<any> {
 
 /***************** Devices *****************/
 
-getDevices(): Observable<any>{
+getDevices(): Observable<ResponseDevice> {
 
   const headers = this.securityService.setHeadersAuth();
 
-  return this.http.get<{device: DeviceData[]}>(`${environment.apiURL}/Dispositivo`, {headers: headers})
+  return this.http.get<ResponseDevice>(`${environment.apiURL}/Dispositivo`, {headers: headers})
     .pipe(
       catchError(err => {
-        const message = 'Error al cargar la lista de dispositivos';
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+saveDevice(device: Partial<Device>): Observable<ResponseDevice> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.post<ResponseDevice>(`${environment.apiURL}/Dispositivo`, device, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+deleteDevice(device_id: number): Observable<DeviceTypeResponse> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+    return this.http.delete<DeviceTypeResponse>(`${environment.apiURL}/Dispositivo/${device_id}`, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+    )
+}
+
+editDevice(device: Device): Observable<ResponseDevice> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+    return this.http.put<ResponseDevice>(`${environment.apiURL}/Dispositivo/${device.id_Disp}`, device, {headers: headers})
+      .pipe(
+        catchError(err => {
+          console.log(err);
+          return throwError(() => new Error(err));
+        }),
+        shareReplay()
+      )
+}
+
+/***************** Device Types*****************/
+
+getDeviceTypes(): Observable<DeviceTypeResponse>{
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.get<DeviceTypeResponse>(`${environment.apiURL}/TipoDispositivo`, {headers: headers})
+    .pipe(
+      catchError(err => {
+        const message = 'Error al cargar la lista de tipos de dispositivos';
 
         Swal.fire({
           icon: 'error',
@@ -473,14 +525,14 @@ getDevices(): Observable<any>{
     )
 }
 
-deleteDevice(device_id: number) {
+saveDeviceType(deviceType: Partial<DeviceType>): Observable<DeviceTypeResponse> {
 
   const headers = this.securityService.setHeadersAuth();
 
-    return this.http.delete(`${environment.apiURL}/Dispositivo/${device_id}`, {headers: headers})
+  return this.http.post<DeviceTypeResponse>(`${environment.apiURL}/TipoDispositivo`, deviceType, {headers: headers})
     .pipe(
       catchError(err => {
-        const message = 'Error al eliminar el dispositivo seleccionado';
+        const message = 'Error al salvar el tipo de dispositivo';
 
         Swal.fire({
           icon: 'error',
@@ -491,55 +543,93 @@ deleteDevice(device_id: number) {
         console.log(err);
         return throwError(() => new Error(message));
       }),
+      shareReplay()
     )
 }
 
+editDeviceType(deviceType: DeviceType): Observable<DeviceTypeResponse> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+    return this.http.put<DeviceTypeResponse>(`${environment.apiURL}/TipoDispositivo/${deviceType.iD_Tipo_Disp}`, deviceType, {headers: headers})
+      .pipe(
+        catchError(err => {
+          console.log(err);
+          return throwError(() => new Error(err));
+        }),
+        shareReplay()
+      )
+  }
+
+deleteDeviceType(device_type_id: number): Observable<DeviceTypeResponse> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+    return this.http.delete<DeviceTypeResponse>(`${environment.apiURL}/TipoDispositivo/${device_type_id}`, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+    )
+}
 
 /***************** Licenses *****************/
 
-getLicenses(): Observable<any> {
+getLicenses(): Observable<ResponseLicense> {
 
   const headers = this.securityService.setHeadersAuth();
 
-  return this.http.get<{licenses: License[]}>(`${environment.apiURL}/Licencia`, {headers: headers})
+  return this.http.get<ResponseLicense>(`${environment.apiURL}/Licencia`, {headers: headers})
     .pipe(
       catchError(err => {
-        const message = 'Error al cargar la lista de licencias';
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: message
-        })
-
         console.log(err);
-        return throwError(() => new Error(message));
+        return throwError(() => new Error(err));
       }),
       shareReplay()
     )
 }
 
-deleteLicense(lic_Id: number) {
+deleteLicense(lic_Id: number): Observable<ResponseLicense> {
 
   const headers = this.securityService.setHeadersAuth();
 
-    return this.http.delete(`${environment.apiURL}/Licencia/${lic_Id}`, {headers: headers})
+    return this.http.delete<ResponseLicense>(`${environment.apiURL}/Licencia/${lic_Id}`, {headers: headers})
     .pipe(
       catchError(err => {
-        const message = 'Error al eliminar la licencia seleccionada';
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: message
-        })
-
         console.log(err);
-        return throwError(() => new Error(message));
+        return throwError(() => new Error(err));
       }),
     )
 }
 
+saveLicense(license: Partial<License>): Observable<ResponseLicense> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.post<ResponseLicense>(`${environment.apiURL}/Licencia`, license, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+editLicense(license: License): Observable<ResponseLicense> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.put<ResponseLicense>(`${environment.apiURL}/Licencia/${license.lic_Id}`, license, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
 
 /***************** License Types *****************/
 
@@ -547,7 +637,7 @@ getLicenseType(): Observable<any> {
 
   const headers = this.securityService.setHeadersAuth();
 
-  return this.http.get<{licenses: LicenseTypeData[]}>(`${environment.apiURL}/TipoLicencia`, {headers: headers})
+  return this.http.get<{licenses: LicenseType[]}>(`${environment.apiURL}/TipoLicencia`, {headers: headers})
     .pipe(
       catchError(err => {
         const message = 'Error al cargar la lista de tipos de licencias';
@@ -565,7 +655,7 @@ getLicenseType(): Observable<any> {
     )
 }
 
-saveLicenseType(licenseType: Partial<LicenseTypeData>): Observable<any> {
+saveLicenseType(licenseType: Partial<LicenseType>): Observable<any> {
 
   const headers = this.securityService.setHeadersAuth();
 
@@ -587,28 +677,20 @@ saveLicenseType(licenseType: Partial<LicenseTypeData>): Observable<any> {
     )
 }
 
-deleteLicenseType(tipo_Lic_Id: number) {
+deleteLicenseType(tipo_Lic_Id: number): Observable<ResponseLicenseType> {
 
   const headers = this.securityService.setHeadersAuth();
 
-    return this.http.delete(`${environment.apiURL}/TipoLicencia/${tipo_Lic_Id}`, {headers: headers})
+    return this.http.delete<ResponseLicenseType>(`${environment.apiURL}/TipoLicencia/${tipo_Lic_Id}`, {headers: headers})
     .pipe(
       catchError(err => {
-        const message = 'Error al eliminar el tipo de licencia seleccionada';
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: message
-        })
-
         console.log(err);
-        return throwError(() => new Error(message));
+        return throwError(() => new Error(err));
       }),
     )
 }
 
-editLicenseType(licenseType: LicenseTypeData): Observable<any> {
+editLicenseType(licenseType: LicenseType): Observable<any> {
 
   const headers = this.securityService.setHeadersAuth();
 
@@ -654,29 +736,21 @@ getServices(): Observable<any> {
     )
 }
 
-getServicesByProduct(id_product: number): Observable<any> {
+getServicesByProduct(id_product: number): Observable<ResponseService> {
 
   const headers = this.securityService.setHeadersAuth();
 
-  return this.http.get<{services: Service[]}>(`${environment.apiURL}/Servicio`, {headers: headers})
+  return this.http.get<ResponseService>(`${environment.apiURL}/Servicio/servicios-por-producto/${id_product}`, {headers: headers})
     .pipe(
       catchError(err => {
-        const message = 'Error al cargar la lista de servicios';
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: message
-        })
-
         console.log(err);
-        return throwError(() => new Error(message));
+        return throwError(() => new Error(err));
       }),
       shareReplay()
     )
 }
 
-deleteService(service_Id: number) {
+deleteService(service_Id: number): Observable<any> {
 
   const headers = this.securityService.setHeadersAuth();
 
@@ -697,17 +771,42 @@ deleteService(service_Id: number) {
     )
 }
 
-/***************** Prices *****************/
-
-getPrices(): Observable<any> {
+saveService(service: Partial<Service>): Observable<ResponseService> {
 
   const headers = this.securityService.setHeadersAuth();
 
-  return this.http.get<{services: Service[]}>(`${environment.apiURL}/Precio`, {headers: headers})
+  return this.http.post<ResponseService>(`${environment.apiURL}/Servicio`, service, {headers: headers})
     .pipe(
       catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
 
-        const message = 'Error al cargar la lista de precios';
+saveProductServiceAmount(service: Partial<ProductServicePrice>) : Observable<ResponseService> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.post<ResponseService>(`${environment.apiURL}/Servicio/monto-servicios`, service, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+editService(service: Service): Observable<any> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.put(`${environment.apiURL}/Servicio/${service.servicio_Id}`, service, {headers: headers})
+    .pipe(
+      catchError(err => {
+        const message = 'Error al editar el servicio';
 
         Swal.fire({
           icon: 'error',
@@ -717,6 +816,26 @@ getPrices(): Observable<any> {
 
         console.log(err);
         return throwError(() => new Error(message));
+      }),
+      shareReplay()
+    )
+}
+
+
+
+
+
+/***************** Prices *****************/
+
+getPrices(): Observable<ResponsePrice> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.get<ResponsePrice>(`${environment.apiURL}/Precio`, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
       }),
       shareReplay()
     )
@@ -743,27 +862,148 @@ deletePrice(price_id: number): Observable<any> {
     )
 }
 
-editPrice(price: PriceData): Observable<any> {
+editPrice(price: Price): Observable<ResponsePrice> {
+
+const headers = this.securityService.setHeadersAuth();
+
+  return this.http.put<ResponsePrice>(`${environment.apiURL}/Precio/${price.id_Precio}`, price, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+savePrice(price: Partial<Price>): Observable<ResponsePrice> {
 
   const headers = this.securityService.setHeadersAuth();
 
-    return this.http.put(`${environment.apiURL}/Precio/${price.id_Precio}`, price, {headers: headers})
-      .pipe(
-        catchError(err => {
-          const message = 'Error al editar el precio';
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: message
-          })
-
-          console.log(err);
-          return throwError(() => new Error(message));
-        }),
-        shareReplay()
-      )
+  return this.http.post<ResponsePrice>(`${environment.apiURL}/Precio`, price, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
 }
+
+/***************** Status Types *****************/
+
+getStatusTypes(): Observable<ResponseStatusTypes> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.get<ResponseStatusTypes>(`${environment.apiURL}/TipoEstado`, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+saveStatusType(statusType: Partial<StatusType>): Observable<ResponseStatusTypes> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.post<ResponseStatusTypes>(`${environment.apiURL}/TipoEstado`, statusType, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+editStatusType(statusType: StatusType): Observable<ResponseStatusTypes> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.put<ResponseStatusTypes>(`${environment.apiURL}/TipoEstado/${statusType.iD_Tpest}`, statusType, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+deleteStatusType(statusTypeID: number): Observable<ResponseStatusTypes> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.delete<ResponseStatusTypes>(`${environment.apiURL}/TipoEstado/${statusTypeID}`, {headers: headers})
+  .pipe(
+    catchError(err => {
+      console.log(err);
+      return throwError(() => new Error(err));
+    }),
+  )
+}
+
+/***************** Status *****************/
+
+getStatus(): Observable<ResponseStatus> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.get<ResponseStatus>(`${environment.apiURL}/Estado`, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+saveStatus(status: Partial<Status>): Observable<ResponseStatus> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.post<ResponseStatus>(`${environment.apiURL}/Estado`, status, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+editStatus(status: Status): Observable<ResponseStatus> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.put<ResponseStatus>(`${environment.apiURL}/Estado/${status.id_est}`, status, {headers: headers})
+    .pipe(
+      catchError(err => {
+        console.log(err);
+        return throwError(() => new Error(err));
+      }),
+      shareReplay()
+    )
+}
+
+deleteStatus(statusID: number): Observable<ResponseStatus> {
+
+  const headers = this.securityService.setHeadersAuth();
+
+  return this.http.delete<ResponseStatus>(`${environment.apiURL}/Estado/${statusID}`, {headers: headers})
+  .pipe(
+    catchError(err => {
+      console.log(err);
+      return throwError(() => new Error(err));
+    }),
+  )
+}
+
 
 /***************** Payments *****************/
 /***************** CxC *****************/

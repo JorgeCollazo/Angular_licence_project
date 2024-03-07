@@ -1,0 +1,26 @@
+<h1 mat-dialog-title *ngIf="!isEditing">Añadir tipo de dispositivo</h1>
+<h1 mat-dialog-title *ngIf="isEditing">Editar tipo de dispositivo</h1>
+<div mat-dialog-content>
+  <form [formGroup]="deviceTypeDialogForm">
+    <div class="container-1">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [formControlName]="'nombre'">
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-form-field>
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [formControlName]="'descripcion'"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="container-2">
+      <mat-checkbox formControlName="activeChbx">Activo</mat-checkbox>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions-custom">
+  <button mat-raised-button color="primary" (click)="onSaveClick()" *ngIf="!isEditing">Guardar</button>
+  <button mat-raised-button color="primary" (click)="editDeviceType()" *ngIf="isEditing">Editar</button>
+  <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+</div>

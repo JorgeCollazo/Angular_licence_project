@@ -4,7 +4,6 @@ export interface Service {
   descripcion: string;
   sw_Activo: number;
   usuario_Id: number;
-  producto_Id: number;
 }
 
 

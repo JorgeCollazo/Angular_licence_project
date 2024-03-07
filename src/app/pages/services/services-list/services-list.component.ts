@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Service } from '../interface/serviceData.interface';
+import { ResponseService, Service } from '../interface/serviceData.interface';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PagesService } from '../../pages.service';
 import { ToastrService } from 'ngx-toastr';
 import { ServicesDialogComponent } from '../services-dialog/services-dialog.component';
@@ -20,7 +20,7 @@ export class ServicesListComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['nombre', 'descripcion', 'status', 'actions'];
   dataSource: MatTableDataSource<Service>;
   getServices$: Subscription = new Subscription();
-  deleteCompany$: Subscription = new Subscription();
+  deleteServices$: Subscription = new Subscription();
   isSpinnerLoading: Boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -44,7 +44,7 @@ export class ServicesListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.getServices$.unsubscribe();
-    this.deleteCompany$.unsubscribe();
+    this.deleteServices$.unsubscribe();
   }
 
   applyFilter(event: Event) {
@@ -69,7 +69,28 @@ export class ServicesListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  editService(service: Service) {}
+  editService(service: Service) {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = service;
+
+    const dialogRefEdit = this.dialog.open(
+      ServicesDialogComponent,
+      dialogConfig
+    );
+
+    dialogRefEdit.afterClosed().subscribe((result) => {
+
+      if(!result.isRefreshing)
+        return;
+
+      this.getServices$ = this.pagesService.getServices().subscribe((res: ResponseService) => {
+        this.dataSource = new MatTableDataSource(res.servicios);
+      });
+    });
+  }
 
   deleteService(service: Service) {
 
@@ -81,15 +102,15 @@ export class ServicesListComponent implements OnInit, AfterViewInit, OnDestroy {
       text: `Está seguro de querer eliminar el servicio: ${service.nombre}?`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.deleteCompany$ = this.pagesService
+        this.deleteServices$ = this.pagesService
           .deleteService(service.servicio_Id)
           .subscribe({
-            next: () => {
+            next: (response: ResponseService) => {
               this.toastr.success('Servicio eliminado correctamente', 'Exito', {
                 progressBar: true,
               });
-              this.pagesService.getServices().subscribe((res) => {
-                this.dataSource = new MatTableDataSource(res.grupoEntidades);
+              this.pagesService.getServices().subscribe((res: ResponseService) => {
+                this.dataSource = new MatTableDataSource(res.servicios);
               });
             },
             error: (err) => {

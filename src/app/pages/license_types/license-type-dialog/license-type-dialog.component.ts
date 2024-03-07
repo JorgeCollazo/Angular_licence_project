@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Menu } from 'src/app/security/menus/interfaces/menu.intereface';
 import { SecurityService } from 'src/app/security/security.service';
 import Swal from 'sweetalert2';
-import { LicenseTypeData } from '../interface/licenseType.interface';
+import { LicenseType } from '../interface/licenseType.interface';
 import { PagesService } from '../../pages.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -26,7 +26,7 @@ export class LicenseTypeDialogComponent implements OnDestroy {
 
   constructor(
     public dialogRef: MatDialogRef<LicenseTypeDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: LicenseTypeData,
+    @Inject(MAT_DIALOG_DATA) public data: LicenseType,
     private fb: FormBuilder,
     private pageService: PagesService,
     private toastr: ToastrService
@@ -54,7 +54,7 @@ export class LicenseTypeDialogComponent implements OnDestroy {
         text: 'Hay errores en el formulario'
       })
     } else {
-      const dataDialog: Partial<LicenseTypeData> = {
+      const dataDialog: Partial<LicenseType> = {
         nombre: this.licenseTypeDialogForm.value.name,
         descripcion: this.licenseTypeDialogForm.value.description,
         sw_Admin: Number(this.licenseTypeDialogForm.value.adminChbx),
@@ -83,7 +83,7 @@ export class LicenseTypeDialogComponent implements OnDestroy {
 
   editLicenseType() {
 
-    const dataDialog: LicenseTypeData = {
+    const dataDialog: LicenseType = {
       nombre: this.licenseTypeDialogForm.value.name,
       descripcion: this.licenseTypeDialogForm.value.description,
       sw_Activo: Number(this.licenseTypeDialogForm.value.activeChbx),

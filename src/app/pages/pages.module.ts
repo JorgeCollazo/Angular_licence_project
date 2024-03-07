@@ -30,6 +30,13 @@ import { ServicesDialogComponent } from './services/services-dialog/services-dia
 import { PrecioListComponent } from './precio/precio-list/precio-list.component';
 import { PrecioDialogComponent } from './precio/precio-dialog/precio-dialog.component';
 import { ProductServicesListComponent } from './products/product-services-list/product-services-list.component';
+import { DeviceTypeListComponent } from './device_types/device-type-list/device-type-list.component';
+import { DeviceTypeDialogComponent } from './device_types/device-type-dialog/device-type-dialog.component';
+import { StatusTypesListComponent } from './status_types/status-types-list/status-types-list.component';
+import { StatusTypesDialogComponent } from './status_types/status-types-dialog/status-types-dialog.component';
+import { StatusDialogComponent } from './status/status-dialog/status-dialog.component';
+import { StatusListComponent } from './status/status-list/status-list.component';
+import { ProductServicesDialogComponent } from './products/product-services-dialog/product-services-dialog.component';
 
 
 @NgModule({
@@ -59,6 +66,13 @@ import { ProductServicesListComponent } from './products/product-services-list/p
     PrecioListComponent,
     PrecioDialogComponent,
     ProductServicesListComponent,
+    DeviceTypeListComponent,
+    DeviceTypeDialogComponent,
+    StatusTypesListComponent,
+    StatusTypesDialogComponent,
+    StatusDialogComponent,
+    StatusListComponent,
+    ProductServicesDialogComponent,
   ],
   imports: [
     CommonModule,
